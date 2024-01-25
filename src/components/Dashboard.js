@@ -6,22 +6,54 @@ import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import axios from "axios"
+// import Button from './Button'
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "8b945ef10ea24755b83ac50cede405a0",
 })
 
+
+
+
 export default function Dashboard({ code }) {
   const accessToken = useAuth(code)
+  // console.log(accessToken)
+  const [createdPlaylist, setCreatedPlaylist] = useState(false)
   const [search, setSearch] = useState("")
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
+  const [playlistName ,setPlaylistName] = useState("")
+
+
+
 
   function chooseTrack(track) {
     setPlayingTrack(track)
     setSearch("")
     setLyrics("")
+  }
+
+  const createPlaylist = (accessToken, playlistName) =>{
+    console.log({accessToken, playlistName})
+    axios
+      .post("http://localhost:3001/createplaylist", {
+        playlistName,accessToken
+      })
+      .then(res => {
+        
+        console.log('PLaylist created')
+        setCreatedPlaylist(true);
+
+      })
+      .catch((err) => { 
+        console.log(err)
+        // 
+        console.log('could not create playlist')
+      })
+
+      setPlaylistName('');
+
   }
 
   // useEffect(() => {
@@ -76,6 +108,9 @@ export default function Dashboard({ code }) {
 
   return (
     <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
+
+      {createdPlaylist ? 
+      <div>
       <Form.Control
         type="search"
         placeholder="Search Songs/Artists"
@@ -95,10 +130,18 @@ export default function Dashboard({ code }) {
             {lyrics}
           </div>
         )}
+      </div> 
       </div>
-      {/* <div>
-        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-      </div> */}
+      :<div>
+      <Form.Control
+      type="text"
+      placeholder="Enter Playlist Name"
+      
+      onChange={e => setPlaylistName(e.target.value)}
+    /> 
+<a className="btn btn-success btn-lg" onClick={() => createPlaylist(accessToken, playlistName)}>Create Playlist</a>
+     </div>
+    }
     </Container>
   )
 }
