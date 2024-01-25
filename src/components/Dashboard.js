@@ -44,6 +44,7 @@ export default function Dashboard({ code }) {
         
         console.log('PLaylist created')
         setCreatedPlaylist(true);
+        
 
       })
       .catch((err) => { 
@@ -52,7 +53,6 @@ export default function Dashboard({ code }) {
         console.log('could not create playlist')
       })
 
-      setPlaylistName('');
 
   }
 
@@ -136,7 +136,7 @@ export default function Dashboard({ code }) {
       <Form.Control
       type="text"
       placeholder="Enter Playlist Name"
-      
+      value = {playlistName}
       onChange={e => setPlaylistName(e.target.value)}
     /> 
 <a className="btn btn-success btn-lg" onClick={() => createPlaylist(accessToken, playlistName)}>Create Playlist</a>

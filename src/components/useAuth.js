@@ -15,7 +15,7 @@ export default function useAuth(code) {
         setAccessToken(res.data.accessToken)
         setRefreshToken(res.data.refreshToken)
         setExpiresIn(res.data.expiresIn)
-        // window.history.pushState({}, null, "/")
+        window.history.pushState({}, null, "/")
         
       })
       .catch((err) => {
@@ -43,7 +43,6 @@ export default function useAuth(code) {
     console.log('succesfully refreshed')
     return () => clearInterval(interval)
   }, [refreshToken, expiresIn])
-  console.log(accessToken)
   return accessToken
 }
 

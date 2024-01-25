@@ -75,28 +75,69 @@ app.post("/refresh", (req, res) => {
     })
 })
 
-app.post("/createplaylist", (req,res) =>{
+// app.post("/createplaylist", (req,res) =>{
 
-  console.log(req)
+//   // console.log(req)
 
-  let playlistName = req.body.playlistName
-  let accessToken = req.body.accessToken
-  const spotifyApi = new SpotifyWebApi({
-    redirectUri: process.env.REDIRECT_URI,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-  })
-  spotifyApi.setAccessToken(accessToken);
-  console.log("Creating Playlist ...")
+//   let playlistName = req.body.playlistName
+//   let accessToken = req.body.accessToken
+//   const spotifyApi = new SpotifyWebApi({
+//     redirectUri: process.env.REDIRECT_URI,
+//     clientId: process.env.CLIENT_ID,
+//     clientSecret: process.env.CLIENT_SECRET,
+//   })
+//   spotifyApi.setAccessToken(accessToken);
+//   console.log("Creating Playlist ...")
   
-  spotifyApi.createPlaylist(playlistName, { 'description': 'My testfromserver', 'public': false })
-  .then(function(data) {
-    console.log('Created playlist!');
-  }, function(err) {
-    console.log('Something went wrong!', err);
+//   spotifyApi.createPlaylist(playlistName, { 'description': 'My testfromserver', 'public': false })
+//   .then(function(data) {
+//     console.log(data.body.id);
+//   }, function(err) {
+//     console.log('Something went wrong!', err);
+//   });
+  
+// })
+// ... (previous code)
+
+app.post("/createplaylist", (req, res) => {
+  const playlistName = req.body.playlistName;
+  const accessToken = req.body.accessToken;
+  
+  const createPlaylistPromise = new Promise((resolve, reject) => {
+    const spotifyApi = new SpotifyWebApi({
+      redirectUri: process.env.REDIRECT_URI,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+    });
+
+    spotifyApi.setAccessToken(accessToken);
+
+    console.log("Creating Playlist ...");
+
+    spotifyApi.createPlaylist(playlistName, { description: 'My testfromserver', public: false })
+      .then((data) => {
+        console.log("Playlist created:", data.body.id);
+        resolve(data.body.id);
+      })
+      .catch((err) => {
+        console.log('Error creating playlist:', err);
+        reject(err);
+      });
   });
-  
-})
+
+  // Handle the promise resolution or rejection
+  createPlaylistPromise
+    .then((playlistId) => {
+      res.status(200).json({ success: true, playlistId });
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      res.status(500).json({ success: false, error: error.message });
+    });
+});
+
+// ... (remaining code)
+
 
 app.post("/login", (req, res) => {
   console.log('authsuccesful')
