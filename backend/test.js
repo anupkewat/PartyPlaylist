@@ -5,7 +5,6 @@ const createPlaylistRequest = async () => {
     ownerName: "John Doe",
     partyName: "Party123",
     playlistName: "MyPlaylist",
-    accessToken: "BQDrb6HoTnezGKcPx2EPFb7gwUFDNj94g_-np_zFEBoPeJNI1ls0QMfDxdNounk0Z-I0GzpqzSapXbtpaVw-Aty-HDZE2wDxJAlLFsM8zqz_M2cV3DdRVSTTDMQGK5_bDtiC8QEcET4NlXZZbuVTFt3TioCuoi_e8PM9UkpIEZcTw6CnX3muFKGwTCiO2kiRIb84Fz4sSFI8FUtgUCzj68W0zfS5G7Ng7LDIXzKXRGivZByUrov9Jgk0HS0irHrmACkKimAHNb4gGhvzmGXeBlikLZ_vLAc6X9i3wmrtcp4LZ6g",
   };
 
   try {
