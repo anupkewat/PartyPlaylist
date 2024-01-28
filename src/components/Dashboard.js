@@ -1,6 +1,8 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
+import PlaylistView from "./PlaylistView"
+import SignUpForm from "./SignUpForm"
 // import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
@@ -24,6 +26,7 @@ export default function Dashboard({ code }) {
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
   const [playlistName ,setPlaylistName] = useState("")
+  const [playlistId , setPlaylistId] = useState("")
 
 
 
@@ -34,27 +37,27 @@ export default function Dashboard({ code }) {
     setLyrics("")
   }
 
-  const createPlaylist = (accessToken, playlistName) =>{
-    console.log({accessToken, playlistName})
-    axios
-      .post("http://localhost:3001/createplaylist", {
-        playlistName,accessToken
-      })
-      .then(res => {
+  // const createPlaylist = (accessToken, playlistName) =>{
+  //   console.log({accessToken, playlistName})
+  //   axios
+  //     .post("http://localhost:3001/createplaylist", {
+  //       playlistName,accessToken
+  //     })
+  //     .then(res => {
         
-        console.log('PLaylist created')
-        setCreatedPlaylist(true);
+  //       console.log('PLaylist created')
+  //       setCreatedPlaylist(true);
         
 
-      })
-      .catch((err) => { 
-        console.log(err)
-        // 
-        console.log('could not create playlist')
-      })
+  //     })
+  //     .catch((err) => { 
+  //       console.log(err)
+  //       // 
+  //       console.log('could not create playlist')
+  //     })
 
 
-  }
+  // }
 
   // useEffect(() => {
   //   if (!playingTrack) return
@@ -131,16 +134,18 @@ export default function Dashboard({ code }) {
           </div>
         )}
       </div> 
+      <div>
+        <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
+      </div>
       </div>
       :<div>
-      <Form.Control
-      type="text"
-      placeholder="Enter Playlist Name"
-      value = {playlistName}
-      onChange={e => setPlaylistName(e.target.value)}
-    /> 
-<a className="btn btn-success btn-lg" onClick={() => createPlaylist(accessToken, playlistName)}>Create Playlist</a>
+  <SignUpForm accessToken = {accessToken} setCreatedPlaylist = {setCreatedPlaylist} setPlaylistId = {setPlaylistId} setPlaylistName = {setPlaylistName}/>
+      
+
+
+
      </div>
+
     }
     </Container>
   )

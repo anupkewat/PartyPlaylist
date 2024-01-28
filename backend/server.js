@@ -6,6 +6,7 @@ const SpotifyWebApi = require("spotify-web-api-node")
 const mongoose = require("mongoose") 
 const app = express()
 app.use(cors())
+const playlistModel = require('./schemas')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -17,15 +18,6 @@ mongoose.connect(uri);
 const db = mongoose.connection; 
 
 
-const roomSchema = new mongoose.Schema({
-  // Define your schema fields and their types
-  playlistName: String,
-  accessCode: Number,
-  ownerName: String,
-  // ... add more fields as needed
-
-});
-const roomModel = mongoose.model('roomDetails', roomSchema);
 
 db.on('error', (err) => {
   console.error('Error connecting to MongoDB:', err);
@@ -35,109 +27,129 @@ db.once('open', () => {
   console.log(' Connected to MongoDB');
 });
 
-app.post('/newroom', async (req, res) => {
+app.get("/getplaylistitems" , async(req,res) => {
 
+  const playlistId = req.body.playlistId
+  const accessToken = req.body.accessToken
 
-
-
-  try {
-    const dataToInsert =req.body 
-    const result = await roomModel.create(dataToInsert)
-    res.json({success: true, insertedData: result})
-
-  }
-  catch (err){
-    console.error('Error inserting to DB: ', err)
-    res.status(500).json({success: false, error: error.message})
-  }
-})
-
-app.post("/refresh", (req, res) => {
-  const refreshToken = req.body.refreshToken
+  
   const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI,
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    refreshToken,
-  })
+  });
 
-  spotifyApi
-    .refreshAccessToken()
-    .then(data => {
-      res.json({
-        accessToken: data.body.accessToken,
-        expiresIn: data.body.expiresIn,
-      })
-    })
-    .catch(err => {
-      console.log(err)
-      res.sendStatus(400)
-    })
+  spotifyApi.setAccessToken(accessToken);
+
+
+  spotifyApi.getPlaylist('playlistId')
+  .then(function(data) {
+    console.log('Some information about this playlist', data.body);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
 })
 
-// app.post("/createplaylist", (req,res) =>{
+app.post("/createroom", async (req, res) => {
+  async function checkIfPartyNameExists(playlistDetails) {
+    try {
+      const existingPlaylist = await playlistModel.findOne({ partyName: playlistDetails.partyName });
 
-//   // console.log(req)
+      if (existingPlaylist) {
+        res.status(400).json({ success: false, message: 'Playlist Exists', playlistDetails });
 
-//   let playlistName = req.body.playlistName
-//   let accessToken = req.body.accessToken
-//   const spotifyApi = new SpotifyWebApi({
-//     redirectUri: process.env.REDIRECT_URI,
-//     clientId: process.env.CLIENT_ID,
-//     clientSecret: process.env.CLIENT_SECRET,
-//   })
-//   spotifyApi.setAccessToken(accessToken);
-//   console.log("Creating Playlist ...")
-  
-//   spotifyApi.createPlaylist(playlistName, { 'description': 'My testfromserver', 'public': false })
-//   .then(function(data) {
-//     console.log(data.body.id);
-//   }, function(err) {
-//     console.log('Something went wrong!', err);
-//   });
-  
-// })
-// ... (previous code)
+      }
 
-app.post("/createplaylist", (req, res) => {
-  const playlistName = req.body.playlistName;
-  const accessToken = req.body.accessToken;
+      console.log(`PartyName '${playlistDetails.partyName}' does not exist.`);
+      const playlistEntry = await playlistModel.create(playlistDetails);
+
+      res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
+
+
+      return false;
+    } catch (error) {
+
+      console.error('Error checking partyName:', error);
+      throw error;
+    }
+  }
+
+
+  try {
+    const ownerName = req.body.ownerName;
+    const partyName = req.body.partyName;
+    const playlistName = req.body.playlistName;
+    const accessToken = req.body.accessToken;
+    const displayName = req.body.displayName;
+    const userId = req.body.userID;
   
-  const createPlaylistPromise = new Promise((resolve, reject) => {
+    const playlistDetails = {
+      DisplayName: displayName,
+      userID: userId,
+      playlistName: playlistName,
+      ownerName: ownerName,
+      partyName: partyName,
+      accessToken: accessToken
+    };
+  
+    const result = await checkIfPartyNameExists(playlistDetails);
+
+    
+    }
+   catch (error) {
+    console.error('Error', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+app.post("/createplaylist", async (req, res) => {
+  try {
+    console.log('@/createplaylist')
+    const ownerName = req.body.ownerName; 
+    const partyName = req.body.partyName;
+    const playlistName = req.body.playlistName;
+    const accessToken = req.body.accessToken;
+
+    if (!accessToken) {
+      return res.status(401).json({ success: false, error: "Missing access token" });
+    }
+
     const spotifyApi = new SpotifyWebApi({
       redirectUri: process.env.REDIRECT_URI,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
     });
 
+    console.log(accessToken)
+
     spotifyApi.setAccessToken(accessToken);
 
     console.log("Creating Playlist ...");
 
-    spotifyApi.createPlaylist(playlistName, { description: 'My testfromserver', public: false })
-      .then((data) => {
-        console.log("Playlist created:", data.body.id);
-        resolve(data.body.id);
-      })
-      .catch((err) => {
-        console.log('Error creating playlist:', err);
-        reject(err);
-      });
-  });
+    const spotifyResponse = await spotifyApi.createPlaylist(playlistName, { 'description': 'Created by MyParty', 'public': false });
 
-  // Handle the promise resolution or rejection
-  createPlaylistPromise
-    .then((playlistId) => {
-      res.status(200).json({ success: true, playlistId });
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      res.status(500).json({ success: false, error: error.message });
-    });
+    console.log(spotifyResponse );
+
+
+    const playlistDetails = {
+      DisplayName: spotifyResponse.body.owner.display_name,
+      userID: spotifyResponse.body.owner.id,
+      playlistId :spotifyResponse.body.id,
+      playlistName: playlistName,
+      ownerName: ownerName, 
+      partyName: partyName, 
+      accessToken: accessToken
+    };
+
+    const playlistEntry = await playlistModel.create(playlistDetails);
+    console.log(playlistEntry)
+    res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
+  } catch (err) {
+    console.log('Something went wrong!', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
-
-// ... (remaining code)
-
 
 app.post("/login", (req, res) => {
   console.log('authsuccesful')
