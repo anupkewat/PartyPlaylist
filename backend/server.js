@@ -42,9 +42,11 @@ app.get("/getplaylistitems" , async(req,res) => {
   spotifyApi.setAccessToken(accessToken);
 
 
-  spotifyApi.getPlaylist('playlistId')
-  .then(function(data) {
-    console.log('Some information about this playlist', data.body);
+  spotifyApi.getPlaylist(playlistId)
+  .then((data)=> {
+
+    console.log('Some information about this playlist', data);
+    res.json(data.body)
   }, function(err) {
     console.log('Something went wrong!', err);
   });
