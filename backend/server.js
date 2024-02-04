@@ -8,7 +8,7 @@ const app = express()
 app.use(cors())
 const playlistModel = require('./schemas')
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }))  
 
 const DBpass = process.env.MONGODB_PASS
 
@@ -27,10 +27,26 @@ db.once('open', () => {
   console.log(' Connected to MongoDB');
 });
 
-app.get("/getplaylistitems" , async(req,res) => {
+app.get("/joinplaylist" , async (req,res) => {
+  const partyName = req.query.partyName
+  const userName = req.query.userName
+  await playlistModel.findOne({ partyName: partyName })
+  .then((data)=> {
+    console.log('Found Playlist', data);  
+    res.json(data)
+  }, function(err) {
+    console.log('Could not find room', err);
+  });
 
-  const playlistId = req.body.playlistId
-  const accessToken = req.body.accessToken
+
+})
+
+app.get("/getplaylistitems" , async(req,res) => {
+  console.log('!!!!!request :::' ,req)
+
+ 
+  const playlistId = req.query.playlistId;
+  const accessToken = req.query.accessToken;
 
   
   const spotifyApi = new SpotifyWebApi({
@@ -147,6 +163,7 @@ app.post("/createplaylist", async (req, res) => {
     const playlistEntry = await playlistModel.create(playlistDetails);
     console.log(playlistEntry)
     res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
+
   } catch (err) {
     console.log('Something went wrong!', err);
     res.status(500).json({ success: false, error: err.message });
@@ -176,6 +193,8 @@ app.post("/login", (req, res) => {
       console.log(err)
     })
 })
+
+
 
 
 

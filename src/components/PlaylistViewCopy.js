@@ -2,34 +2,33 @@ import React from "react"
 import { useState, useEffect } from "react"
 import axios from 'axios';
 import SongCard from './SongCard'
-import TrackCard from "./TrackCard";
 
   const PlaylistView = ({ accessToken, playlistId }) => {
     const [playlistData, setPlaylistData] = useState();
 
 
     
-
     
-    const extractTrackInfo = (apiResponse) => {
+    function extractTrackInfo(apiResponse) {
       const tracks = apiResponse.data.tracks.items;
-  
-      const trackInfoArray = tracks.map((track) => {
+    
+      const trackInfoArray = tracks.map(track => {
         const trackData = track.track;
-        const artists = trackData.artists.map((artist) => artist.name).join(', '); // Join artists with a comma
-        const images = trackData.album.images.map((image) => image.url);
-  
+        const artists = trackData.artists.map(artist => artist.name);
+        const images = trackData.album.images.map(image => image.url);
+    
         return {
           id: trackData.id,
           name: trackData.name,
           artists: artists,
-          imageUrls: images,
+          imageUrls: images
         };
       });
-  
+    
       return trackInfoArray;
-    };
-
+    }
+    
+                                                                                     
 
     useEffect(() => {
       const fetchData = async () => {
@@ -45,8 +44,8 @@ import TrackCard from "./TrackCard";
 
           // console.log(response)
 
-         const trackList = extractTrackInfo(response);
-          setPlaylistData(trackList)
+          const parsedInfo = extractTrackInfo(response)
+          setPlaylistData(parsedInfo)
 
         } catch (error) {
           console.error('Error fetching playlist items:', error);
@@ -67,13 +66,10 @@ import TrackCard from "./TrackCard";
       <div className="playlist-container">
         {playlistData ?
           (
-            playlistData.map((track) => (
-              <TrackCard
-                key={track.id}
-                songName={track.name}
-                artistName={track.artists}
-                imageUrls={track.imageUrls}
-              />
+            playlistData.map(track => (
+              <div key={track.id} className="track-item">
+                <SongCard trackName={track.name} artistNames={track.artists.join(', ')} image={track.imageUrls[0]} />
+              </div>
             ))
           )
           : (

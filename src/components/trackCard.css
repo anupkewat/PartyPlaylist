@@ -1,0 +1,120 @@
+.styled-div {
+    width: 300px;
+    height: 75px;
+    background-color: #3498db;
+    color: #fff;
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ui-div {
+    width: 300px;
+    height: 75px;
+    background: rgb(17, 4, 134);
+    border-radius: 3px;
+    box-shadow: rgb(0, 0, 0, 0.7) 5px 10px 50px ,rgb(0, 0, 0, 0.7) -5px 0px 250px;
+    display: flex;
+    color: white;
+    position: relative;
+    flex-direction: row;
+    background: linear-gradient(to right, rgb(20, 30, 48), rgb(36, 59, 85));
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.track-cover {
+    margin: 8px;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    display: flex;
+    color: white;
+    justify-content: center;
+    position: relative;
+    flex-direction: row;
+    background: linear-gradient(to right, rgb(10, 0, 8), rgb(6, 9, 5));
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+.song-details {
+    margin: 8px;
+    width: 150px;
+    height: 60px;
+    flex-direction: column;
+}
+
+.song-title {
+    font-size: 0.9vw;
+    margin: 4px;
+    width: 150px;
+    height: 60px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #e8e8e8;
+    font-weight: 750;
+    /* font-size: 18px; */
+    font-family: 'Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.artist-details {
+    font-size: 0.75vw; /* 5% of the viewport width */
+    max-width: 80%;
+    color: #e8e8e8;
+    font-weight: 350;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* font-size: 15px; */
+    font-family: 'Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
+.icons-row {
+    color: white; 
+    margin: 10px 8px ;
+    width: 20px;
+    height: 55px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+}
+
+
+.icons-row i {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+.icons-row i.clicked {
+    color: pink !important;
+}
+.ui-div:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .ui-div:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  .ui-div:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+  
+
+  /* styles.css or TrackCard.css */
+

@@ -37,27 +37,7 @@ export default function Dashboard({ code }) {
     setLyrics("")
   }
 
-  // const createPlaylist = (accessToken, playlistName) =>{
-  //   console.log({accessToken, playlistName})
-  //   axios
-  //     .post("http://localhost:3001/createplaylist", {
-  //       playlistName,accessToken
-  //     })
-  //     .then(res => {
-        
-  //       console.log('PLaylist created')
-  //       setCreatedPlaylist(true);
-        
 
-  //     })
-  //     .catch((err) => { 
-  //       console.log(err)
-  //       // 
-  //       console.log('could not create playlist')
-  //     })
-
-
-  // }
 
   // useEffect(() => {
   //   if (!playingTrack) return
@@ -138,12 +118,10 @@ export default function Dashboard({ code }) {
         <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
       </div>
       </div>
-      :<div>
+      :
+      <div>
   <SignUpForm accessToken = {accessToken} setCreatedPlaylist = {setCreatedPlaylist} setPlaylistId = {setPlaylistId} setPlaylistName = {setPlaylistName}/>
       
-
-
-
      </div>
 
     }
