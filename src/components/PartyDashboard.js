@@ -1,10 +1,9 @@
 import React, { useState ,useEffect } from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
 import { useContext } from 'react';
 import JoinPartyContext from '../contexts/JoinPartyContext';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import AddSongDashboard from './AddSongDashboard';
 import PlaylistView from './PlaylistView';
 import Box from '@mui/material/Box';
 
@@ -37,7 +36,7 @@ const PartyDashboard = () => {
 
   return (
     <div>
-      <p style={title_style}>Welcome to {playlistName} !!</p>
+      <p style={title_style}> {ownerName}'s Party </p>
       <Box sx={{ width: '100%' }}>
         <Tabs value={value} onChange={handleChange} centered>
           <Tab label="Playlist" sx={{ color: '#e8e8e8' }} />
@@ -47,8 +46,11 @@ const PartyDashboard = () => {
 
       {value === 0 && <div>
         <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
-    </div>} 
-      {value === 1 && <AddSongTab />} {/* Render AddSongTab component when value is 1 */}
+    </div>
+    } 
+      {value === 1 && <div>  <AddSongDashboard  accessToken = {accessToken} playlistId={ playlistId}/> </div>
+      
+      } 
     </div>
   );
 };
@@ -63,13 +65,13 @@ const QueueTab = () => {
 };
 
 const AddSongTab = () => {
-  return <div>Add Song Tab Content</div>;
+  return;
 };
 
 const title_style = {
   color: '#e8e8e8',
   fontWeight: 900,
-  fontSize: '5rem',
+  fontSize: '4rem',
   fontFamily: 'Montserrat,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"!important',
 };
 const color_style = { color: '#e8e8e8' };

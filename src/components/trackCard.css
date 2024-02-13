@@ -1,28 +1,12 @@
-.styled-div {
-    width: 300px;
-    height: 75px;
-    background-color: #3498db;
-    color: #fff;
-    border: 2px solid #2980b9;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px;
-    font-family: 'Arial', sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .ui-div {
     width: 300px;
     height: 75px;
     background: rgb(17, 4, 134);
     border-radius: 3px;
-    box-shadow: rgb(0, 0, 0, 0.7) 5px 10px 50px ,rgb(0, 0, 0, 0.7) -5px 0px 250px;
+    /* box-shadow: rgb(0, 0, 0, 0.7) 5px 10px 50px ,rgb(0, 0, 0, 0.7) -5px 0px 250px; */
     display: flex;
-    color: white;
+    /* color: white; */
     position: relative;
     flex-direction: row;
     background: linear-gradient(to right, rgb(20, 30, 48), rgb(36, 59, 85));
@@ -36,7 +20,7 @@
     height: 60px;
     border-radius: 10px;
     display: flex;
-    color: white;
+    /* color: white; */
     justify-content: center;
     position: relative;
     flex-direction: row;
@@ -80,27 +64,28 @@
 }
 
 .icons-row {
-    color: white; 
+    color: rgb(255, 255, 255); 
     margin: 10px 8px ;
     width: 20px;
-    height: 55px;
+    /* height: 55px; */
     display: flex;
     flex-direction: column; 
     justify-content: space-between;
 }
 
 
-.icons-row i {
-    color: white;
+.icons-row-red i {
+    color: rgb(255, 0, 0);
     text-decoration: none;
     cursor: pointer;
 }
 
-
-
-.icons-row i.clicked {
-    color: pink !important;
+.icons-row-white i {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    cursor: pointer;
 }
+
 .ui-div:first-child {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;

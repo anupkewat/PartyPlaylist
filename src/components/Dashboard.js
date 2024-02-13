@@ -1,14 +1,21 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
+
 import PlaylistView from "./PlaylistView"
 import SignUpForm from "./SignUpForm"
 // import Player from "./Player"
+
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
+import SearchInput from "./SearchInput"
 import axios from "axios"
 // import Button from './Button'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "8b945ef10ea24755b83ac50cede405a0",
@@ -29,7 +36,7 @@ export default function Dashboard({ code }) {
   const [playlistId , setPlaylistId] = useState("")
 
 
-
+  
 
   function chooseTrack(track) {
     setPlayingTrack(track)
@@ -94,25 +101,32 @@ export default function Dashboard({ code }) {
 
       {createdPlaylist ? 
       <div>
-      <Form.Control
-        type="search"
+        <p style={title_style}>Your Party </p>
+      <SearchInput 
         placeholder="Search Songs/Artists"
         value={search}
-        onChange={e => setSearch(e.target.value)}
+        onChange={(value) => setSearch(value)}
       />
-      <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }} >
-        {searchResults.map(track => (
+      <div className="flex-grow-1 my-2" styl  e={{ overflowY: "auto" }} >
+      <ToastContainer />
+        {searchResults.slice(0, 8).map(track => (
+
           <TrackSearchResult
+          setSearch = {setSearch}
             track={track}
             key={track.uri}
+            key1 = {track.uri}
             chooseTrack={chooseTrack}
+            playlistId = {playlistId}
+            accessToken = {accessToken}
+
           />
         ))}
-        {searchResults.length === 0 && (
+        {/* {searchResults.length === 0 && (
           <div className="text-center" style={{ whiteSpace: "pre" }}>
             {lyrics}
           </div>
-        )}
+        )} */}
       </div> 
       <div>
         <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
@@ -127,4 +141,14 @@ export default function Dashboard({ code }) {
     }
     </Container>
   )
+
+
 }
+
+
+const title_style = {
+  color: '#e8e8e8',
+  fontWeight: 900,
+  fontSize: '4rem',
+  fontFamily: 'Montserrat,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"!important',
+};

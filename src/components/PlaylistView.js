@@ -70,6 +70,7 @@ import TrackCard from "./TrackCard";
             playlistData.map((track) => (
               <TrackCard
                 key={track.id}
+                id = {track.id}
                 songName={track.name}
                 artistName={track.artists}
                 imageUrls={track.imageUrls}

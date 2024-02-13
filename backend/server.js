@@ -41,6 +41,31 @@ app.get("/joinplaylist" , async (req,res) => {
 
 })
 
+app.post("/addtrack" , async (req,res) => {
+  const trackId = req.body.trackIdName;
+  const playlistId = req.body.playlistId;
+  const accessToken =  req.body.accessToken;
+
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: process.env.REDIRECT_URI,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+  });
+
+  spotifyApi.setAccessToken(accessToken);
+
+  spotifyApi.addTracksToPlaylist(playlistId, [trackId])
+    .then(function(data) {
+      console.log('Added tracks to playlist!');
+      res.status(200).send({ success: true, message: 'Track added to playlist successfully' });
+    })
+    .catch(function(err) {
+      console.log('Something went wrong!', err);
+      res.status(500).send({ success: false, message: 'Failed to add track to playlist' });
+    });
+});
+
+
 app.get("/getplaylistitems" , async(req,res) => {
   console.log('!!!!!request :::' ,req)
 

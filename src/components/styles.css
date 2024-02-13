@@ -248,4 +248,50 @@ input[type="number"] {
   
   
   
+  .input {
+    max-width: 190px;
+    background-color: #1a1a1a;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    color: white;
+  }
   
+  .input:focus {
+    animation: rotateShadow 2s infinite linear;
+  }
+  
+  @keyframes rotateShadow {
+    0% {
+      box-shadow: -2px -2px 0px 0px #aa00ff, 2px 2px 0px 0px #3700ff;
+    }
+    25% {
+      box-shadow: -2px 2px 0px 0px #aa00ff, 2px -2px 0px 0px #3700ff;
+    }
+    50% {
+      box-shadow: 2px 2px 0px 0px #aa00ff, -2px -2px 0px 0px #3700ff;
+    }
+    75% {
+      box-shadow: 2px -2px 0px 0px #aa00ff, -2px 2px 0px 0px #3700ff;
+    }
+    100% {
+      box-shadow: -2px -2px 0px 0px #aa00ff, 2px 2px 0px 0px #3700ff;
+    }
+  }
+  
+  .centered {
+
+    /* .playlist-container { */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #282828;
+      border-radius: 10px;
+      padding: 16px;
+      margin: auto;
+      justify-content: center;
+      max-width: fit-content;
+      background-size: cover;
+    /* } */
+  }
