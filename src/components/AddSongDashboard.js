@@ -1,6 +1,4 @@
 import React, { useState ,useEffect } from 'react';
-import { useContext } from 'react';
-import JoinPartyContext from '../contexts/JoinPartyContext';
 import TrackSearchResult from "./TrackSearchResult"
 import SpotifyWebApi from "spotify-web-api-node"
 import SearchInput from "./SearchInput"

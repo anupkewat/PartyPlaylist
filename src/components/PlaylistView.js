@@ -8,10 +8,10 @@ import TrackCard from "./TrackCard";
     const [playlistData, setPlaylistData] = useState();
 
 
-    
 
     
-    const extractTrackInfo = (apiResponse) => {
+
+        const extractTrackInfo = (apiResponse) => {
       const tracks = apiResponse.data.tracks.items;
   
       const trackInfoArray = tracks.map((track) => {
@@ -43,8 +43,6 @@ import TrackCard from "./TrackCard";
             },
           });
 
-          // console.log(response)
-
          const trackList = extractTrackInfo(response);
           setPlaylistData(trackList)
 
@@ -69,6 +67,7 @@ import TrackCard from "./TrackCard";
           (
             playlistData.map((track) => (
               <TrackCard
+                playlistId = {playlistId}
                 key={track.id}
                 id = {track.id}
                 songName={track.name}

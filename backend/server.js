@@ -18,6 +18,18 @@ mongoose.connect(uri);
 const db = mongoose.connection; 
 
 
+const queueDetailsSchema = new mongoose.Schema({
+  playlistId: { type: String, required: true },
+  songs: [{
+    id: { type: String },
+    name: { type: String },
+    numberOfLikes: { type: Number, default: 0 },
+    numberOfDislikes: { type: Number, default: 0 }
+  }]
+});
+const QueueDetailsModel = mongoose.model('QueueDetails', queueDetailsSchema);
+
+
 
 db.on('error', (err) => {
   console.error('Error connecting to MongoDB:', err);
@@ -26,6 +38,23 @@ db.on('error', (err) => {
 db.once('open', () => {
   console.log(' Connected to MongoDB');
 });
+
+
+const extractTrackInfo = (apiResponse) => {
+  const tracks = apiResponse.tracks.items;
+
+  const trackInfoArray = tracks.map((track) => {
+    const trackData = track.track;
+
+    return {
+      id: trackData.id,
+      name: trackData.name,
+      
+    };
+  });
+
+  return trackInfoArray;
+};
 
 app.get("/joinplaylist" , async (req,res) => {
   const partyName = req.query.partyName
@@ -65,33 +94,241 @@ app.post("/addtrack" , async (req,res) => {
     });
 });
 
+app.get("/getpopularity", async (req, res) =>{
+  try {
+    const playlistId = req.query.playlistId;
+    const songId = req.query.songId;
 
-app.get("/getplaylistitems" , async(req,res) => {
-  console.log('!!!!!request :::' ,req)
+    const queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
 
- 
-  const playlistId = req.query.playlistId;
-  const accessToken = req.query.accessToken;
+    if (!queueDetails) {
+      return res.status(404).json({ error: 'Queue details not found for the provided playlistId' });
+    }
 
-  
-  const spotifyApi = new SpotifyWebApi({
-    redirectUri: process.env.REDIRECT_URI,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-  });
+    const song = queueDetails.songs.find(song => song.id === songId);
 
-  spotifyApi.setAccessToken(accessToken);
+    if (!song) {
+      return res.status(404).json({ error: 'Song not found in the playlist' });
+    }
+
+    res.json({
+      // songId: song.id,
+      // name: song.name,
+      numberOfLikes: song.numberOfLikes,
+      numberOfDislikes: song.numberOfDislikes
+    });
+  } catch (err) {
+    console.error('Error searching for song:', err);
+    res.status(500).json({ error: 'Failed to search for song' });
+  }
+});
+   
+app.post("/likeSong", async (req, res) => {
+  try {
+    const { playlistId, songId } = req.body;
+
+    // Find the queue details document based on the playlistId
+    let queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
+
+    if (!queueDetails) {
+      return res.status(404).json({ error: 'Queue details not found for the provided playlistId' });
+    }
+
+    // Find the song in the queue details by its ID
+    const song = queueDetails.songs.find(song => song.id === songId);
+
+    if (!song) {
+      return res.status(404).json({ error: 'Song not found in the playlist' });
+    }
+
+    // Increment the number of likes for the song
+    song.numberOfLikes++;
+
+    // Save the updated queue details document
+    await queueDetails.save();
+
+    // Return the updated song details
+    res.json({
+      songId: song.id,
+      name: song.name,
+      numberOfLikes: song.numberOfLikes,
+      numberOfDislikes: song.numberOfDislikes,
+      success : true
+    });
+  } catch (err) {
+    console.error('Error liking song:', err);
+    res.status(500).json({ error: 'Failed to like song' });
+  }
+});
+app.post("/unlikeSong", async (req, res) => {
+  try {
+    const { playlistId, songId } = req.body;
+
+    // Find the queue details document based on the playlistId
+    let queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
+
+    if (!queueDetails) {
+      return res.status(404).json({ error: 'Queue details not found for the provided playlistId' });
+    }
+
+    // Find the song in the queue details by its ID
+    const song = queueDetails.songs.find(song => song.id === songId);
+
+    if (!song) {
+      return res.status(404).json({ error: 'Song not found in the playlist' });
+    }
+
+    // Increment the number of likes for the song
+    if ( song.numberOfLikes > 0)
+    {song.numberOfLikes--;
+
+    // Save the updated queue details document
+    await queueDetails.save();
+    }
+    // Return the updated song details
+    res.json({
+      songId: song.id,
+      name: song.name,
+      numberOfLikes: song.numberOfLikes,
+      numberOfDislikes: song.numberOfDislikes,
+      success : true
+    });
+  } catch (err) {
+    console.error('Error liking song:', err);
+    res.status(500).json({ error: 'Failed to like song' });
+  }
+});
+app.post("/undislikeSong", async (req, res) => {
+  try {
+    const { playlistId, songId } = req.body;
+
+    // Find the queue details document based on the playlistId
+    let queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
+
+    if (!queueDetails) {
+      return res.status(404).json({ error: 'Queue details not found for the provided playlistId' });
+    }
+
+    // Find the song in the queue details by its ID
+    const song = queueDetails.songs.find(song => song.id === songId);
+
+    if (!song) {
+      return res.status(404).json({ error: 'Song not found in the playlist' });
+    }
+
+    // Increment the number of likes for the song
+    if ( song.numberOfDislikes > 0)
+        {song.numberOfDislikes--;
+
+        // Save the updated queue details document
+        await queueDetails.save();
+        }
+    // Return the updated song details
+    res.json({
+      songId: song.id,
+      name: song.name,
+      numberOfLikes: song.numberOfLikes,
+      numberOfDislikes: song.numberOfDislikes,
+      success : true
+    });
+  } catch (err) {
+    console.error('Error liking song:', err);
+    res.status(500).json({ error: 'Failed to like song' });
+  }
+});
+app.post("/dislikeSong", async (req, res) => {
+  try {
+    const { playlistId, songId } = req.body;
+
+    // Find the queue details document based on the playlistId
+    let queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
+
+    if (!queueDetails) {
+      return res.status(404).json({ error: 'Queue details not found for the provided playlistId' });
+    }
+
+    // Find the song in the queue details by its ID
+    const song = queueDetails.songs.find(song => song.id === songId);
+
+    if (!song) {
+      return res.status(404).json({ error: 'Song not found in the playlist' });
+    }
+
+    // Increment the number of likes for the song
+    song.numberOfDislikes++;
+
+    // Save the updated queue details document
+    await queueDetails.save();
+
+    // Return the updated song details
+    res.json({
+      songId: song.id,
+      name: song.name,
+      numberOfLikes: song.numberOfLikes,
+      numberOfDislikes: song.numberOfDislikes,success : true
+    });
+  } catch (err) {
+    console.error('Error liking song:', err);
+    res.status(500).json({ error: 'Failed to like song' });
+  }
+});
 
 
-  spotifyApi.getPlaylist(playlistId)
-  .then((data)=> {
 
-    console.log('Some information about this playlist', data);
-    res.json(data.body)
-  }, function(err) {
-    console.log('Something went wrong!', err);
-  });
-})
+app.get("/getplaylistitems", async (req, res) => {
+  try {
+    const playlistId = req.query.playlistId;
+    const accessToken = req.query.accessToken;
+
+    const spotifyApi = new SpotifyWebApi({
+      redirectUri: process.env.REDIRECT_URI,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+    });
+
+    spotifyApi.setAccessToken(accessToken);
+
+    const data = await spotifyApi.getPlaylist(playlistId);
+    const api_response = data.body;
+    const tracklist = extractTrackInfo(api_response);
+
+    // Find or create the queue details document based on the playlistId
+    let queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
+
+    if (!queueDetails) {
+      // console.log('Queue details not found. Creating new entry...');
+      queueDetails = await QueueDetailsModel.create({ playlistId: playlistId, songs: [] });
+      // console.log('New queue details entry created:', queueDetails);
+    }
+
+    queueDetails.songs = queueDetails.songs.filter(song => {
+      return tracklist.some(track => track.id === song.id);
+    });
+
+    for (const playlistItem of tracklist) {
+      const { id, name } = playlistItem;
+
+      // Check if the track exists in the queue details
+      const existingSong = queueDetails.songs.find(song => song.id === id);
+
+      // If the track does not exist in the queue details, add it with default values for likes and dislikes
+      if (!existingSong) {
+        queueDetails.songs.push({ id: id, name: name, numberOfLikes: 0, numberOfDislikes: 0 });
+        console.log(`Added track ${name} to queue details`);
+      }
+    }
+
+    // Save the updated queue details document
+    await queueDetails.save();
+
+    console.log('Updated queue details:', queueDetails);
+    res.json(data.body); // Send the playlist data as response
+  } catch (err) {
+    console.error('Error retrieving playlist:', err);
+    res.status(500).json({ error: 'Failed to retrieve playlist' });
+  }
+});
+
 
 app.post("/createroom", async (req, res) => {
   async function checkIfPartyNameExists(playlistDetails) {
@@ -172,7 +409,7 @@ app.post("/createplaylist", async (req, res) => {
 
     const spotifyResponse = await spotifyApi.createPlaylist(playlistName, { 'description': 'Created by MyParty', 'public': false });
 
-    console.log(spotifyResponse );
+    // console.log(spotifyResponse );
 
 
     const playlistDetails = {
@@ -186,12 +423,16 @@ app.post("/createplaylist", async (req, res) => {
     };
 
     const playlistEntry = await playlistModel.create(playlistDetails);
-    console.log(playlistEntry)
+    // console.log(playlistEntry)
     res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
 
   } catch (err) {
     console.log('Something went wrong!', err);
     res.status(500).json({ success: false, error: err.message });
+
+
+  
+    
   }
 });
 
