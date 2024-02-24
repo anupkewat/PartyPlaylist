@@ -7,7 +7,7 @@ export default function useAuth(code) {
   const [expiresIn, setExpiresIn] = useState();
 
   useEffect(() => {
-    console.loh('himeat')
+    console.log('himeat')
     const fetchData = async () => {
       try {
         const res = await axios.post("http://localhost:3001/login", {
@@ -31,11 +31,6 @@ export default function useAuth(code) {
     if (!refreshToken || !expiresIn) return;
 
     const interval = setInterval(() => {
-      // if (localStorage.getItem("PartyNameLS")){
-      //   const PartyNameValue = localStorage.getItem("PartyNameLS")
-      //   console.log(PartyNameValue)
-
-      // }
 
       let oldAccessToken = accessToken;
 

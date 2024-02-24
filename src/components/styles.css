@@ -71,10 +71,11 @@
     height: 100vh; /* Optional: Set the height to full viewport height */
   }
   .center-container {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Optional: Set the height to full viewport height */
+    /* height: 100vh; Optional: Set the height to full viewport height */
   }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

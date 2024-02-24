@@ -3,7 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function TrackSearchResult({ track, chooseTrack, key1, playlistId, accessToken, setSearch }) {
+export default function TrackSearchResult({ track, key1, playlistId, accessToken, setSearch }) {
   function handlePlay() {
     console.log(key1);
     console.log(playlistId);

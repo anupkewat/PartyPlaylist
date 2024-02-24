@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap'; // Assuming you are using Bootstrap for styling
 import axios from "axios"
 
-const SignUpForm = ({accessToken,setCreatedPlaylist, setPlaylistId}) => {
+const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId}) => {
   const [partyName, setPartyName] = useState('');
   const [playlistName, setPlaylistName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   console.log('@signupform: creating playlist with AT:' ,accessToken)
 
-  const createPlaylist = () =>{
+  const updateAccessToken = () =>{
 
-console.log('@signupform: creating playlist with AT:' ,accessToken)
     
     axios
-      .post("http://localhost:3001/createplaylist", {
+      .post("http://localhost:3001/updateacesstoken", {
         playlistName,accessToken,ownerName,partyName
       })
       .then((res)=> {
@@ -25,7 +24,7 @@ console.log('@signupform: creating playlist with AT:' ,accessToken)
         const data = res.body
 
 
-        console.log(`created : ${res.data.playlistEntry}`)
+        console.log(`rejoined : ${res.data.playlistEntry}`)
         setPlaylistId(res.data.playlistEntry.playlistId)
         setPlaylistName(res.data.playlistEntry.playlistName)
         setCreatedPlaylist(true)
@@ -47,7 +46,8 @@ console.log('@signupform: creating playlist with AT:' ,accessToken)
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
-    createPlaylist(); 
+    console.log('clicked :)')
+    // updateAccessToken(); 
 
   };
 
@@ -88,10 +88,7 @@ console.log('@signupform: creating playlist with AT:' ,accessToken)
             />
           </div>
   
-          {/* Button to Create Playlist */}
-          {/* <Button variant="success" size="lg" type="submit">
-            Create Playlist
-          </Button> */}
+
           <button type="submit" className="form-submit-btn" onClick={handleSubmit}>
             Submit
           </button>
@@ -101,4 +98,4 @@ console.log('@signupform: creating playlist with AT:' ,accessToken)
   );
 };
 
-export default SignUpForm;
+export default RejoinForm;

@@ -1,9 +1,12 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import useAuth from "./useAuth"
-
+import Box from '@mui/material/Box';
+import RejoinForm from "./RejoinForm";
 import PlaylistView from "./PlaylistView"
 import SignUpForm from "./SignUpForm"
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 // import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
@@ -24,6 +27,7 @@ const spotifyApi = new SpotifyWebApi({
 
 
 export default function Dashboard({ code }) {
+  const [value, setValue] = React.useState(0);
   const accessToken = useAuth(code)
   // console.log(accessToken)
   const [createdPlaylist, setCreatedPlaylist] = useState(false)
@@ -95,65 +99,84 @@ export default function Dashboard({ code }) {
     return () => (cancel = true)
   }, [search, accessToken])
 
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
-
-      {createdPlaylist ? 
-<div>
+      {createdPlaylist ? (
         <div>
-          
-          <p style={title_style} >Your Party </p>
-        <SearchInput 
-          placeholder="Search Songs/Artists"
-          value={search}
-          onChange={(value) => setSearch(value)}
-        />
-
-        <div className="flex-grow-1 my-2" styl  e={{ overflowY: "auto" }} >
-        <ToastContainer />
-          {searchResults.slice(0, 8).map(track => (
-  
-            <TrackSearchResult
-            setSearch = {setSearch}
-              track={track}
-              key={track.uri}
-              key1 = {track.uri}
-              chooseTrack={chooseTrack}
-              playlistId = {playlistId}
-              accessToken = {accessToken}
-  
+          <div>
+            <p style={title_style}>Your Party </p>
+            <SearchInput
+              placeholder="Search Songs/Artists"
+              value={search}
+              onChange={(value) => setSearch(value)}
             />
-          ))}
-          {/* {searchResults.length === 0 && (
-            <div className="text-center" style={{ whiteSpace: "pre" }}>
-              {lyrics}
+            <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+              <ToastContainer />
+              {searchResults.slice(0, 8).map((track) => (
+                <TrackSearchResult
+                  setSearch={setSearch}
+                  track={track}
+                  key={track.uri}
+                  key1={track.uri}
+                  chooseTrack={chooseTrack}
+                  playlistId={playlistId}
+                  accessToken={accessToken}
+                />
+              ))}
             </div>
-          )} */}
-        </div> 
+            <div>
+              <PlaylistView
+                accessToken={accessToken}
+                playlistId={playlistId}
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
         <div>
-          <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
-        </div>
-  
-        </div>
-</div>
-      :
-      <div>
-  <SignUpForm accessToken = {accessToken} setCreatedPlaylist = {setCreatedPlaylist} setPlaylistId = {setPlaylistId} setPlaylistName = {setPlaylistName}/>
-      
-     </div>
+          <div>
+            <p style={title_style}>Start Your Party </p>
+            {/* <Box sx={{ width: "100%" }}> */}
+              <Tabs value={value} onChange={handleChange} centered>
+                <Tab label="New Party" sx={{ color: "#e8e8e8" }} />
+                <Tab label="Rejoin Party" sx={{ color: "#e8e8e8" }} />
+              </Tabs>
+            {/* </Box> */}
 
-    }
+            {value === 0 && (
+              <SignUpForm
+              accessToken={accessToken}
+              setCreatedPlaylist={setCreatedPlaylist}
+              setPlaylistId={setPlaylistId}
+              setPlaylistName={setPlaylistName}
+            />
+            )}
+            {value === 1 && (
+              <RejoinForm
+              accessToken = {accessToken}
+              setCreatedPlaylist={setCreatedPlaylist}
+              setPlaylistId={setPlaylistId}
+              setPlaylistName={setPlaylistName} />
+                
+              
+            )}
+          </div>
+        </div>
+      )}
     </Container>
-  )
-
-
+  );
 }
 
-
 const title_style = {
-  textAlign : 'center',
-  color: '#e8e8e8',
+  textAlign: "center",
+  color: "#e8e8e8",
   fontWeight: 900,
-  fontSize: '4rem',
-  fontFamily: 'Montserrat,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"!important',
+  fontSize: "4rem",
+  fontFamily:
+    'Montserrat,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"!important',
 };
