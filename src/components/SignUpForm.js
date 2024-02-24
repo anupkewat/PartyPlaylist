@@ -52,46 +52,51 @@ const SignUpForm = ({accessToken,setCreatedPlaylist, setPlaylistId}) => {
   };
 
   return (
-    <div>
-      <Form onSubmit={handleSubmit}>
-        {/* Party Name Input */}
-        <Form.Group controlId="partyName">
-          <Form.Label>Party Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Party Name"
-            value={partyName}
-            onChange={e => setPartyName(e.target.value)}
-          />
-        </Form.Group>
-
-        {/* Playlist Name Input */}
-        <Form.Group controlId="playlistName">
-          <Form.Label>Playlist Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Playlist Name"
-            value={playlistName}
-            onChange={e => setPlaylistName(e.target.value)}
-          />
-        </Form.Group>
-
-        {/* Owner Name Input */}
-        <Form.Group controlId="ownerName">
-          <Form.Label>Owner Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Owner Name"
-            value={ownerName}
-            onChange={e => setOwnerName(e.target.value)}
-          />
-        </Form.Group>
-
-        {/* Button to Create Playlist */}
-        <Button variant="success" size="lg" type="submit">
-          Create Playlist
-        </Button>
-      </Form>
+    <div className="center-container">
+<div className='form-container'>
+        <div className='form'>
+          {/* Party Name Input */}
+          <div className='form-group'>
+            <label>Party Name</label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Party Name"
+              value={partyName}
+              onChange={e => setPartyName(e.target.value)}
+            />
+          </div>
+  
+          {/* Playlist Name Input */}
+          <div className='form-group'>
+            <label>Playlist Name</label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Playlist Name"
+              value={playlistName}
+              onChange={e => setPlaylistName(e.target.value)}
+            />
+          </div>
+  
+          {/* Owner Name Input */}
+          <div className='form-group'>
+            <label>Owner Name</label>
+            <Form.Control
+              type="text"
+              placeholder="Enter Owner Name"
+              value={ownerName}
+              onChange={e => setOwnerName(e.target.value)}
+            />
+          </div>
+  
+          {/* Button to Create Playlist */}
+          {/* <Button variant="success" size="lg" type="submit">
+            Create Playlist
+          </Button> */}
+          <button type="submit" className="form-submit-btn" onClick={handleSubmit}>
+            Submit
+          </button>
+        </div>
+    </div>
     </div>
   );
 };

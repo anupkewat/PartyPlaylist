@@ -7,6 +7,7 @@ export default function useAuth(code) {
   const [expiresIn, setExpiresIn] = useState();
 
   useEffect(() => {
+    console.loh('himeat')
     const fetchData = async () => {
       try {
         const res = await axios.post("http://localhost:3001/login", {

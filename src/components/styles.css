@@ -295,3 +295,18 @@ input[type="number"] {
       background-size: cover;
     /* } */
   }
+
+  .search-result-container {
+    background-color: rgb(251, 154, 154);
+    cursor: pointer;
+    width: 30px;
+    color: white;
+    /* padding-left: 20px; */
+    display: flex;
+      flex-direction: row;
+      background-color: #282828;
+      border-radius: 10px;
+      padding: 8px;
+    
+  }
+  

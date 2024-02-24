@@ -5,7 +5,6 @@ import useAuth from "./useAuth"
 import PlaylistView from "./PlaylistView"
 import SignUpForm from "./SignUpForm"
 // import Player from "./Player"
-
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
@@ -100,38 +99,43 @@ export default function Dashboard({ code }) {
     <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
 
       {createdPlaylist ? 
-      <div>
-        <p style={title_style}>Your Party </p>
-      <SearchInput 
-        placeholder="Search Songs/Artists"
-        value={search}
-        onChange={(value) => setSearch(value)}
-      />
-      <div className="flex-grow-1 my-2" styl  e={{ overflowY: "auto" }} >
-      <ToastContainer />
-        {searchResults.slice(0, 8).map(track => (
+<div>
+        <div>
+          
+          <p style={title_style} >Your Party </p>
+        <SearchInput 
+          placeholder="Search Songs/Artists"
+          value={search}
+          onChange={(value) => setSearch(value)}
+        />
 
-          <TrackSearchResult
-          setSearch = {setSearch}
-            track={track}
-            key={track.uri}
-            key1 = {track.uri}
-            chooseTrack={chooseTrack}
-            playlistId = {playlistId}
-            accessToken = {accessToken}
-
-          />
-        ))}
-        {/* {searchResults.length === 0 && (
-          <div className="text-center" style={{ whiteSpace: "pre" }}>
-            {lyrics}
-          </div>
-        )} */}
-      </div> 
-      <div>
-        <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
-      </div>
-      </div>
+        <div className="flex-grow-1 my-2" styl  e={{ overflowY: "auto" }} >
+        <ToastContainer />
+          {searchResults.slice(0, 8).map(track => (
+  
+            <TrackSearchResult
+            setSearch = {setSearch}
+              track={track}
+              key={track.uri}
+              key1 = {track.uri}
+              chooseTrack={chooseTrack}
+              playlistId = {playlistId}
+              accessToken = {accessToken}
+  
+            />
+          ))}
+          {/* {searchResults.length === 0 && (
+            <div className="text-center" style={{ whiteSpace: "pre" }}>
+              {lyrics}
+            </div>
+          )} */}
+        </div> 
+        <div>
+          <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
+        </div>
+  
+        </div>
+</div>
       :
       <div>
   <SignUpForm accessToken = {accessToken} setCreatedPlaylist = {setCreatedPlaylist} setPlaylistId = {setPlaylistId} setPlaylistName = {setPlaylistName}/>
@@ -147,6 +151,7 @@ export default function Dashboard({ code }) {
 
 
 const title_style = {
+  textAlign : 'center',
   color: '#e8e8e8',
   fontWeight: 900,
   fontSize: '4rem',

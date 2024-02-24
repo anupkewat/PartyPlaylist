@@ -88,7 +88,7 @@ app.post("/addtrack" , async (req,res) => {
       console.log('Added tracks to playlist!');
       res.status(200).send({ success: true, message: 'Track added to playlist successfully' });
     })
-    .catch(function(err) {
+    .catch(function(err) { 
       console.log('Something went wrong!', err);
       res.status(500).send({ success: false, message: 'Failed to add track to playlist' });
     });
