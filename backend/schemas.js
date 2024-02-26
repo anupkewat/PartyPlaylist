@@ -8,6 +8,7 @@ const playlistSchema = new mongoose.Schema({
   ownerName: String,
   partyName: String,
   accessToken: String,
+  password: String
 });
 
 const PlaylistModel = mongoose.model('Playlist', playlistSchema);

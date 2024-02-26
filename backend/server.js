@@ -11,7 +11,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))  
 
 const DBpass = process.env.MONGODB_PASS
-
 const uri =  `mongodb+srv://superuser:${DBpass}@cluster0.6ynczxx.mongodb.net/?retryWrites=true&w=majority`
 mongoose.connect(uri);
 
@@ -61,7 +60,7 @@ app.get("/joinplaylist" , async (req,res) => {
   const userName = req.query.userName
   await playlistModel.findOne({ partyName: partyName })
   .then((data)=> {
-    console.log('Found Playlist', data);  
+    // console.log('Found Playlist', data);  
     res.json(data)
   }, function(err) {
     console.log('Could not find room', err);
@@ -321,7 +320,7 @@ app.get("/getplaylistitems", async (req, res) => {
     // Save the updated queue details document
     await queueDetails.save();
 
-    console.log('Updated queue details:', queueDetails);
+    // console.log('Updated queue details:', queueDetails);
     res.json(data.body); // Send the playlist data as response
   } catch (err) {
     console.error('Error retrieving playlist:', err);
@@ -330,69 +329,32 @@ app.get("/getplaylistitems", async (req, res) => {
 });
 
 
-app.post("/createroom", async (req, res) => {
-  async function checkIfPartyNameExists(playlistDetails) {
-    try {
-      const existingPlaylist = await playlistModel.findOne({ partyName: playlistDetails.partyName });
 
-      if (existingPlaylist) {
-        res.status(400).json({ success: false, message: 'Playlist Exists', playlistDetails });
-
-      }
-
-      console.log(`PartyName '${playlistDetails.partyName}' does not exist.`);
-      const playlistEntry = await playlistModel.create(playlistDetails);
-
-      res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
-
-
-      return false;
-    } catch (error) {
-
-      console.error('Error checking partyName:', error);
-      throw error;
-    }
-  }
-
-
-  try {
-    const ownerName = req.body.ownerName;
-    const partyName = req.body.partyName;
-    const playlistName = req.body.playlistName;
-    const accessToken = req.body.accessToken;
-    const displayName = req.body.displayName;
-    const userId = req.body.userID;
-  
-    const playlistDetails = {
-      DisplayName: displayName,
-      userID: userId,
-      playlistName: playlistName,
-      ownerName: ownerName,
-      partyName: partyName,
-      accessToken: accessToken
-    };
-  
-    const result = await checkIfPartyNameExists(playlistDetails);
-
-    
-    }
-   catch (error) {
-    console.error('Error', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
 
 
 app.post("/createplaylist", async (req, res) => {
   try {
+    // console.log(req)
     console.log('@/createplaylist')
     const ownerName = req.body.ownerName; 
     const partyName = req.body.partyName;
     const playlistName = req.body.playlistName;
     const accessToken = req.body.accessToken;
-
+    const password = req.body.password
+      
+  
     if (!accessToken) {
+      console.log("Missing Access token")
+
       return res.status(401).json({ success: false, error: "Missing access token" });
+
+    }
+    // console.log(ownerName, partyName, playlistName, password )
+    const existingPlaylist = await playlistModel.findOne({ ownerName, partyName, playlistName });
+
+    if (existingPlaylist) {
+        console.log("Playlist with the same owner, party, and name already exists")
+        return res.status(402).json({ success: false, error: "Playlist with the same owner, party, and name already exists" });
     }
 
     const spotifyApi = new SpotifyWebApi({
@@ -401,7 +363,7 @@ app.post("/createplaylist", async (req, res) => {
       clientSecret: process.env.CLIENT_SECRET,
     });
 
-    console.log(accessToken)
+    // console.log(accessToken)
 
     spotifyApi.setAccessToken(accessToken);
 
@@ -419,7 +381,8 @@ app.post("/createplaylist", async (req, res) => {
       playlistName: playlistName,
       ownerName: ownerName, 
       partyName: partyName, 
-      accessToken: accessToken
+      accessToken: accessToken, 
+      password: password
     };
 
     const playlistEntry = await playlistModel.create(playlistDetails);
@@ -460,6 +423,101 @@ app.post("/login", (req, res) => {
     })
 })
 
+app.post("/updateaccesstoken" , async (req,res) =>{
+
+  try {
+    const {ownerName, partyName, playlistName, password, accessToken } = req.body
+    // console.log({ownerName, partyName, playlistName, password, accessToken })
+    const existingPlaylist = await playlistModel.findOne({ ownerName, partyName, playlistName, password })
+
+    if ( !existingPlaylist){
+      console.log('invalid creds')
+      return res.status(404).json({success: false, error: "PLaylist not found or incorrect password"})
+    }
+
+    existingPlaylist.accessToken = accessToken
+    await existingPlaylist.save();
+    const playlistEntry = existingPlaylist;
+    res.status(201).json({ success: true, message: 'Playlist Rejoined',playlistEntry });
+
+  }
+  catch(err) {
+    console.log('error while rejoining playlist')    
+    res.status(500).json({ success: false, error: err.message });  
+    
+    
+  }
+})
+
+app.post('/reorderplaylist', async (req, res) => {
+  try {
+    const playlistId = req.body.playlistId;
+    const accessToken = req.body.accessToken;
+
+    const spotifyApi = new SpotifyWebApi({
+      redirectUri: process.env.REDIRECT_URI,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      accessToken: accessToken
+    });
+
+    // Fetch tracks from the playlist
+    const trackList = await getPlaylistTracks(spotifyApi, playlistId);
+
+    console.log('fecthing spotify playlist...');
+    
+    const queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
+    console.log(queueDetails)
+
+    if (!queueDetails) {
+      console.log(queueDetails)
+      return res.status(404).json({ error: 'Queue details not found for the provided playlistId' });
+    }
+
+
+    const sortedTracks = sortTracksByLikesAndDislikes(queueDetails.songs);
+    // console.log(sortedTracks)
+    
+    // Reorder tracks in the playlist
+    await reorderPlaylistTracks(spotifyApi, playlistId, sortedTracks);
+
+    res.status(200).json({ message: 'Playlist reordered successfully' });
+
+  } catch (err) {
+    console.error('Error reordering playlist:', err);
+    res.status(500).json({ error: 'Failed to reorder playlist' });
+  }
+});
+
+async function getPlaylistTracks(spotifyApi, playlistId) {
+  try {
+    const data = await spotifyApi.getPlaylist(playlistId);
+    const tracks = extractTrackInfo(data.body);
+    return tracks;
+  } catch (err) {
+    console.error('Error fetching playlist tracks:', err);
+    return [];
+  }
+}
+function sortTracksByLikesAndDislikes(songs) {
+  return songs.sort((a, b) => {
+    const aLikes = parseInt(a.numberOfLikes) - parseInt(a.numberOfDislikes);
+    const bLikes = parseInt(b.numberOfLikes) - parseInt(b.numberOfDislikes);
+    return bLikes - aLikes; 
+  });
+}
+
+async function reorderPlaylistTracks(spotifyApi, playlistId, sortedTracks) {
+  try {
+    const trackURIs = sortedTracks.map(track => 'spotify:track:' + track.id);
+    // console.log(trackURIs)
+    await spotifyApi.replaceTracksInPlaylist(playlistId, trackURIs);
+    console.log('Tracks reordered in playlist!');
+  } catch (err) {
+    console.error('Error reordering playlist tracks:', err);
+    throw err;
+  }
+}
 
 
 
