@@ -18,24 +18,28 @@
     return (
 
       <Router>
-    <div className="App" style={base_styles}>
-      <Switch>
-        <Route path='/login'>
-        { code ? <Dashboard code={code} /> : <Login />}
-          <Button onClick={() => window.location.href = 'http://localhost:3000/'} text={'go back'} />
-        </Route>
+    <div className="base-style" >
+      {/* <div className='flexy'>  <p className='title-style'>Party Playlist </p></div> */}
 
-        <Route path='/join'>
-       <JoinDashboard />
-         
-          <Button onClick={() => window.location.href = 'http://localhost:3000/'} text={'go back'} />
-        </Route>
-        
-        <Route path='/'>
-          <Button onClick={() => window.location.href = 'http://localhost:3000/login'} text={'Start Party'} />
-          <Button onClick={() => window.location.href = 'http://localhost:3000/join'} text={'Join Party'} />
-        </Route>
-      </Switch>
+      <div className='flexy'>
+          <Switch>
+            <Route path='/login'>
+            { code ? <Dashboard code={code} /> : <Login />}
+              <Button onClick={() => window.location.href = 'http://localhost:3000/'} text={'go back'} />
+            </Route>
+
+            <Route path='/join'>
+          <JoinDashboard />
+            
+              <Button onClick={() => window.location.href = 'http://localhost:3000/'} text={'go back'} />
+            </Route>
+            
+            <Route path='/'>
+              <Button onClick={() => window.location.href = 'http://localhost:3000/login'} text={'Start Party'} />
+              <Button onClick={() => window.location.href = 'http://localhost:3000/join'} text={'Join Party'} />
+            </Route>
+          </Switch>
+      </div>
     </div>
   </Router>
 
@@ -44,7 +48,11 @@
 
     );
   }
-
-  const base_styles = { backgroundColor: '#212121', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }
+  const title_style = {
+    color: '#e8e8e8',
+    fontWeight: 900,
+    fontSize: '12vw',
+    fontFamily: 'Montserrat,ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"!important',
+  };
 
   export default App;

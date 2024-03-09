@@ -11,13 +11,13 @@ import TrackCard from "./TrackCard";
 
     
 
-        const extractTrackInfo = (apiResponse) => {
+      const extractTrackInfo = (apiResponse) => {
       const tracks = apiResponse.data.tracks.items;
   
       const trackInfoArray = tracks.map((track) => {
-        const trackData = track.track;
-        const artists = trackData.artists.map((artist) => artist.name).join(', '); // Join artists with a comma
-        const images = trackData.album.images.map((image) => image.url);
+      const trackData = track.track;
+      const artists = trackData.artists.map((artist) => artist.name).join(', '); // Join artists with a comma
+      const images = trackData.album.images.map((image) => image.url);
   
         return {
           id: trackData.id,
@@ -62,7 +62,7 @@ import TrackCard from "./TrackCard";
       
 
     return (
-      <div className="playlist-container">
+      <div className="playlist-container" >
         {playlistData ?
           (
             playlistData.map((track) => (

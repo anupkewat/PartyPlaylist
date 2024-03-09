@@ -1,7 +1,7 @@
 .audio-player {
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     width: 300px;
     height: 80px;
     background-color: #282828;
@@ -10,6 +10,7 @@
     box-sizing: border-box;
   }
   
+ 
   .album-cover {
     width: 64px;
     height: 64px;
@@ -118,14 +119,17 @@ input[type="number"] {
   .playlist-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     background-color: #282828;
     border-radius: 10px;
     padding: 16px;
     margin: auto;
-    justify-content: center;
+    /* justify-content: center; */
     max-width: fit-content;
     background-size: cover;
+    /* overflow: scroll; */
+    max-height: 500px; 
+    overflow-y: scroll; 
   }
   .song-card {
     border: 1px solid blue; /* Add a border for debugging */
@@ -250,7 +254,7 @@ input[type="number"] {
   
   
   .input {
-    max-width: 190px;
+    max-width: 300px;
     background-color: #1a1a1a;
     border: none;
     padding: 10px;
@@ -310,4 +314,19 @@ input[type="number"] {
       padding: 8px;
     
   }
+
+
   
+.playlist-container::-webkit-scrollbar {
+  width: 12px; /* Adjust width to match padding-right */
+}
+
+.playlist-container::-webkit-scrollbar-track {
+  background: #282828;
+}
+
+.playlist-container::-webkit-scrollbar-thumb {
+  background-color: whitesmoke;
+  border-radius: 20px;     
+} 
+

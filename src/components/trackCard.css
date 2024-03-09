@@ -10,8 +10,8 @@
     position: relative;
     flex-direction: row;
     background: linear-gradient(to right, rgb(20, 30, 48), rgb(36, 59, 85));
-    transition: all 0.3s ease-in-out;
-    overflow: hidden;
+    /* transition: all 0.3s ease-in-out; */
+    overflow: visible;
 }
 
 .track-cover {

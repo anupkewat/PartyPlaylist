@@ -37,6 +37,7 @@ export default function Dashboard({ code }) {
   const [lyrics, setLyrics] = useState("")
   const [playlistName ,setPlaylistName] = useState("")
   const [playlistId , setPlaylistId] = useState("")
+  const [toggleSettings, setToggleSettings] = useState()
 
 
   
@@ -106,10 +107,21 @@ export default function Dashboard({ code }) {
 
   return (
     <Container className="d-flex flex-column py-2" style={{ height: "100vh" }}>
-      {createdPlaylist ? (
-        <div>
-          <div>
+      {createdPlaylist ? 
+          
+          
+          
+          (
+          
+            
+
+          
+            
+          <div style ={{alignContent : 'center' , justifyContent : 'center'}}>
+          <div style ={{alignContent : 'center'}}>
             <p style={title_style}>Your Party </p>
+
+
             <SearchInput
               placeholder="Search Songs/Artists"
               value={search}
@@ -129,24 +141,30 @@ export default function Dashboard({ code }) {
                 />
               ))}
             </div>
-            <div>
               <PlaylistView
                 accessToken={accessToken}
                 playlistId={playlistId}
               />
-            </div>
           </div>
         </div>
-      ) : (
+
+
+
+
+      ) 
+      
+      
+      
+      
+      
+      : (
         <div>
           <div>
             <p style={title_style}>Start Your Party </p>
-            {/* <Box sx={{ width: "100%" }}> */}
               <Tabs value={value} onChange={handleChange} centered>
                 <Tab label="New Party" sx={{ color: "#e8e8e8" }} />
                 <Tab label="Rejoin Party" sx={{ color: "#e8e8e8" }} />
               </Tabs>
-            {/* </Box> */}
 
             {value === 0 && (
               <SignUpForm

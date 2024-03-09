@@ -3,13 +3,14 @@ import styled from 'styled-components';
 import React from 'react'
 
 const StyledButton = styled.button`
+  margin-bottom: 10px;
   background: none;
   border: none;
   color: #e1e1e1;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.8vw;
   font-family: inherit;
-  font-weight: 800;
+  font-weight: 1000;
   position: relative;
   text-transform: uppercase;
   transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
