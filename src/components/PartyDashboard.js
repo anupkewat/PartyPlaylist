@@ -6,13 +6,17 @@ import Tab from '@mui/material/Tab';
 import AddSongDashboard from './AddSongDashboard';
 import PlaylistView from './PlaylistView';
 import Box from '@mui/material/Box';
+import SongLimit from './SongLimit';
+import axios from 'axios';
+import { responsiveFontSizes } from '@mui/material';
 
-const PartyDashboard = () => {
+const PartyDashboard = ({userName , partyName }) => {
     const [value, setValue] = React.useState(0);
     
     const { partyDetails } = useContext(JoinPartyContext);
     const { setAccessToken, setPlaylistName, setOwnerName, setPlaylistId } = useContext(JoinPartyContext);
     const { accessToken, playlistName, ownerName, playlistId,setPartyDetails } = useContext(JoinPartyContext);
+    const [songBalance, setSongBalance ] = useState();
     setAccessToken(partyDetails.accessToken);
     setPlaylistName(partyDetails.playlistName);
     setOwnerName(partyDetails.ownerName);
@@ -26,7 +30,28 @@ const PartyDashboard = () => {
   }, [partyDetails, setAccessToken, setPlaylistName, setOwnerName, playlistId, playlistName ]);
 
 
-
+  useEffect(() => {
+    const getSongBalance = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/getsongbalance', {
+          params: {
+            userName,
+            partyName, 
+            playlistName,
+          },
+        });
+        console.log(response.data.songBalance); // Log inside the function
+        setSongBalance(response.data.songBalance);
+        return response.data.songBalance;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    getSongBalance(); // Call the function
+  
+  }, [playlistName, userName, partyName]);
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -37,6 +62,9 @@ const PartyDashboard = () => {
   return (
     <div>
       <p style={title_style}> {ownerName}'s Party </p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <SongLimit text = {songBalance} />
+</div>
       <Box sx={{ width: '100%' }}>
         <Tabs value={value} onChange={handleChange} centered>
           <Tab label="Playlist" sx={{ color: '#e8e8e8' }} />
@@ -55,18 +83,7 @@ const PartyDashboard = () => {
   );
 };
 
-const QueueTab = () => {
-  return <div>
-    
 
-
-
-  </div>;
-};
-
-const AddSongTab = () => {
-  return;
-};
 
 const title_style = {
   color: '#e8e8e8',

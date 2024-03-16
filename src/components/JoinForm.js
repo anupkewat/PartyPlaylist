@@ -7,12 +7,10 @@ import JoinPartyContext from '../contexts/JoinPartyContext';
 
 
 
-const JoinForm = ({setJoinedParty}) => {
+const JoinForm = ({partyName, playlistName, setJoinedParty, userName, setUserName, setPartyName, setPlaylistName}) => {
     const {partyDetails} =  useContext(JoinPartyContext)
     const {setPartyDetails} = useContext(JoinPartyContext)
-
-    const [partyName, setPartyName] = useState('');
-    const [userName , setuserName] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,6 +22,9 @@ const JoinForm = ({setJoinedParty}) => {
             params: {
               partyName,
               userName,
+              playlistName,
+              password,
+              
             },
           });
 
@@ -50,8 +51,16 @@ const JoinForm = ({setJoinedParty}) => {
       <div className="form-container">
         <form className="form">
           <div className="form-group">
-            <label htmlFor="PartyId">Secret Code</label>
+            <label htmlFor="PartyId">Party </label>
             <input required="" name="PartyId" id="PartyId" type="text"  value ={partyName} onChange={ e=> { setPartyName(e.target.value)}}/>
+          </div>
+          <div className="form-group">
+            <label htmlFor="PartyName">Playlist </label>
+            <input required="" name="PartyName" id="PartyName" type="text"  value ={playlistName} onChange={ e=> { setPlaylistName(e.target.value)}}/>
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Secret Code</label>
+            <input required="" name="password" id="password" type="password"  value ={password} onChange={ e=> { setPassword(e.target.value)}}/>
           </div>
           <div className="form-group">
             <label htmlFor="phoneNumber">Phone Number</label>
@@ -63,9 +72,11 @@ const JoinForm = ({setJoinedParty}) => {
               pattern="[0-9]*" 
               placeholder="+91"
               value = {userName}
-              onChange ={e => setuserName(e.target.value)}
+              onChange ={e => setUserName(e.target.value)}
             />
           </div>
+
+          
           <button type="submit" className="form-submit-btn" onClick={handleSubmit}>
             Submit
           </button>

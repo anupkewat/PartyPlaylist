@@ -6,7 +6,9 @@ const JoinDashboard = () => {
 
 
 const [joinedParty, setJoinedParty] = useState(false)
-
+const [userName, setUserName] = useState()
+ const [partyName, setPartyName] = useState('');
+const [playlistName , setPlaylistName] = useState('');
 
 
 return (
@@ -14,12 +16,13 @@ return (
    { !joinedParty ?
     <div style={base_styles}>
         <div className="center-container">
-        <JoinForm setJoinedParty={setJoinedParty}  />
+        <JoinForm  partyName={partyName} playlistName={playlistName} userName={userName} setPartyName={setPartyName} setPlaylistName={setPlaylistName} 
+         setUserName = {setUserName} setJoinedParty={setJoinedParty}  />
         </div>
     </div>
     :
     <>
-        <PartyDashboard />
+        <PartyDashboard userName = {userName} partyName={partyName}  />
     </>
 }
     </DataProvider>

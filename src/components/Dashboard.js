@@ -7,6 +7,7 @@ import PlaylistView from "./PlaylistView"
 import SignUpForm from "./SignUpForm"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Settings from "./Settings"
 // import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
@@ -16,6 +17,7 @@ import axios from "axios"
 // import Button from './Button'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
@@ -119,14 +121,26 @@ export default function Dashboard({ code }) {
             
           <div style ={{alignContent : 'center' , justifyContent : 'center'}}>
           <div style ={{alignContent : 'center'}}>
+           <div style = {{ flexDirection: 'row'}}>
             <p style={title_style}>Your Party </p>
+            </div> 
 
 
+
+            <Box sx={{ width: '100%' }}>
+        <Tabs value={value} onChange={handleChange} centered>
+          <Tab label="Playlist" sx={{ color: '#e8e8e8' }} />
+          <Tab label="Manage Party" sx={{ color: '#e8e8e8' }} />
+        </Tabs>
+      </Box>
+      { value === 0 &&
+            <div>
             <SearchInput
               placeholder="Search Songs/Artists"
               value={search}
               onChange={(value) => setSearch(value)}
             />
+            
             <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
               <ToastContainer />
               {searchResults.slice(0, 8).map((track) => (
@@ -140,11 +154,21 @@ export default function Dashboard({ code }) {
                   accessToken={accessToken}
                 />
               ))}
+              
             </div>
+
               <PlaylistView
                 accessToken={accessToken}
                 playlistId={playlistId}
               />
+
+            </div>
+}
+
+{
+  value === 1 &&  <div> <Settings/> </div>
+}
+
           </div>
         </div>
 

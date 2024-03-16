@@ -16,6 +16,25 @@ mongoose.connect(uri);
 
 const db = mongoose.connection; 
 
+const playlistWorkingDetailsSchema = new mongoose.Schema({
+  playlistName: { type: String, required: true },
+  partyName: { type: String, required: true },
+  refreshInterval: { type: Number, default: 5 },
+  songLimit: { type: Number, default: 5 },
+  capacity: { type: Number, default: 50 }
+});
+const PlaylistWorkingDetailsModel = mongoose.model('playlistWorkingDetails', playlistWorkingDetailsSchema);
+
+
+const userDetailsSchema = new mongoose.Schema({
+  userName: { type: String, required: true },
+  isBlocked: { type: Boolean, default: false },
+  songBalance: { type: Number },
+  partyName: { type: String, required: true },
+  playlistName: { type: String, required: true },
+})
+
+const userDetailsModel = mongoose.model('UserDetails', userDetailsSchema);
 
 const queueDetailsSchema = new mongoose.Schema({
   playlistId: { type: String, required: true },
@@ -56,18 +75,58 @@ const extractTrackInfo = (apiResponse) => {
 };
 
 app.get("/joinplaylist" , async (req,res) => {
+
   const partyName = req.query.partyName
+  const playlistName = req.query.playlistName
+  const password = req.query.password
   const userName = req.query.userName
-  await playlistModel.findOne({ partyName: partyName })
-  .then((data)=> {
-    // console.log('Found Playlist', data);  
-    res.json(data)
+
+   
+
+  userDetails  = await userDetailsModel.findOne({ userName: userName, playlistName: playlistName , partyName: partyName })
+  .then(async (data, userDetails) => {
+    if(userDetails){
+      if (data.isBlocked){
+        res.sendStatus(406);
+      }
+
+    }
+    else{
+      console.log('new user here')
+      
+      const playlistWorkingDetails = await PlaylistWorkingDetailsModel.findOne({ partyName: partyName , playlistName: playlistName })
+      if(playlistWorkingDetails)
+      {
+      songBalance = playlistWorkingDetails.songLimit; //default balance for new users
+      console.log(`FOUND PLAYLIST WITH SONG LIMIT ${songBalance}`)}
+      else
+      {
+        songBalance = 0
+      }
+
+      const newUser = new userDetailsModel({
+        userName: userName,
+        partyName: partyName,
+        playlistName: playlistName,
+        songBalance: songBalance
+      });
+      await newUser.save();
+    }
+    await playlistModel.findOne({ partyName: partyName , playlistName: playlistName, password: password })  
+    .then((data)=> {
+      // console.log('Found Playlist', data);  
+      res.json(data)
+    }, function(err) {
+      console.log('Could not find room', err);
+    });
+
   }, function(err) {
-    console.log('Could not find room', err);
+    console.log('Error finding user', err);
   });
 
 
 })
+
 
 app.post("/addtrack" , async (req,res) => {
   const trackId = req.body.trackIdName;
@@ -276,9 +335,13 @@ app.post("/dislikeSong", async (req, res) => {
 
 app.get("/getplaylistitems", async (req, res) => {
   try {
+
+
     const playlistId = req.query.playlistId;
     const accessToken = req.query.accessToken;
-
+    if (accessToken === undefined || playlistId === undefined) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
     const spotifyApi = new SpotifyWebApi({
       redirectUri: process.env.REDIRECT_URI,
       clientId: process.env.CLIENT_ID,
@@ -327,7 +390,6 @@ app.get("/getplaylistitems", async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve playlist' });
   }
 });
-
 
 
 
@@ -386,6 +448,11 @@ app.post("/createplaylist", async (req, res) => {
     };
 
     const playlistEntry = await playlistModel.create(playlistDetails);
+
+    const playlistWorkingDetails = await PlaylistWorkingDetailsModel.create({
+      playlistName: playlistName,
+      partyName: partyName,
+    });
     // console.log(playlistEntry)
     res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
 
@@ -398,6 +465,39 @@ app.post("/createplaylist", async (req, res) => {
     
   }
 });
+
+
+app.get("/getsongbalance", async (req, res) => {
+  
+  try {
+    const userName = req.query.userName;
+    const partyName = req.query.partyName;
+    const playlistName = req.query.playlistName;
+
+    const userDetails = await userDetailsModel.findOne({
+      partyName,  
+      playlistName,
+      userName
+    });
+
+    if (!userDetails) {
+      return res.status(404).json({ error: "User details not found" });
+    }
+
+    const { songBalance } = userDetails;
+
+    console.log(`User ${userName} song balance: ${songBalance}`);
+    
+    res.json({ songBalance: songBalance });
+
+  } catch (err) {
+    console.error("Error retrieving user details:", err);
+    res.status(500).json({ error: "Failed to retrieve user details" });
+  }
+});
+
+
+
 
 app.post("/login", (req, res) => {
   console.log('authsuccesful')
