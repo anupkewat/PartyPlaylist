@@ -8,13 +8,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const spotifyApi = new SpotifyWebApi({
     clientId: "8b945ef10ea24755b83ac50cede405a0",
   })
-const AddSongDashboard = ({accessToken , playlistId}) => {
+const AddSongDashboard = ({songBalanceTrigger, setSongBalanceTrigger, songBalance, setSongBalance, userName , playlistName , partyName, accessToken , playlistId}) => {
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
-    
-  
-
-   
 
 useEffect(() => {
     
@@ -73,7 +69,7 @@ useEffect(() => {
       <ToastContainer />
         {searchResults.slice(0, 8).map(track => (
 
-          <TrackSearchResult setSearch = {setSearch} track={track} key={track.uri} key1 = {track.uri}  playlistId = {playlistId} accessToken = {accessToken} />
+          <TrackSearchResult songBalanceTrigger={songBalanceTrigger} setSongBalanceTrigger = {setSongBalanceTrigger} songBalance = {songBalance}  setSongBalance = {setSongBalance} userName = {userName} playlistName = {playlistName} partyName = {partyName} setSearch = {setSearch} track={track} key={track.uri} key1 = {track.uri}  playlistId = {playlistId} accessToken = {accessToken} />
         ))}
 
       </div> 

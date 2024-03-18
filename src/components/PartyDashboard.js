@@ -16,6 +16,7 @@ const PartyDashboard = ({userName , partyName }) => {
     const { partyDetails } = useContext(JoinPartyContext);
     const { setAccessToken, setPlaylistName, setOwnerName, setPlaylistId } = useContext(JoinPartyContext);
     const { accessToken, playlistName, ownerName, playlistId,setPartyDetails } = useContext(JoinPartyContext);
+    const [ songBalanceTrigger, setSongBalanceTrigger ] = useState(false);
     const [songBalance, setSongBalance ] = useState();
     setAccessToken(partyDetails.accessToken);
     setPlaylistName(partyDetails.playlistName);
@@ -33,6 +34,7 @@ const PartyDashboard = ({userName , partyName }) => {
   useEffect(() => {
     const getSongBalance = async () => {
       try {
+        console.log('triggered song balance')
         const response = await axios.get('http://localhost:3001/getsongbalance', {
           params: {
             userName,
@@ -50,7 +52,7 @@ const PartyDashboard = ({userName , partyName }) => {
   
     getSongBalance(); // Call the function
   
-  }, [playlistName, userName, partyName]);
+  }, [songBalanceTrigger, userName, playlistName, partyName]);
   
 
   const handleChange = (event, newValue) => {
@@ -76,7 +78,7 @@ const PartyDashboard = ({userName , partyName }) => {
         <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
     </div>
     } 
-      {value === 1 && <div>  <AddSongDashboard  accessToken = {accessToken} playlistId={ playlistId}/> </div>
+      {value === 1 && <div>  <AddSongDashboard  songBalanceTrigger = {songBalanceTrigger} setSongBalanceTrigger = {setSongBalanceTrigger} songBalance = {songBalance}  setSongBalance = {setSongBalance} userName = {userName}  playlistName = {playlistName} partyName = {partyName} accessToken = {accessToken} playlistId={ playlistId}/> </div>
       
       } 
     </div>

@@ -145,6 +145,7 @@ export default function Dashboard({ code }) {
               <ToastContainer />
               {searchResults.slice(0, 8).map((track) => (
                 <TrackSearchResult
+                  adminAccess={true}                  
                   setSearch={setSearch}
                   track={track}
                   key={track.uri}

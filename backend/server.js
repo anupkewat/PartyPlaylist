@@ -101,6 +101,7 @@ app.get("/joinplaylist" , async (req,res) => {
       console.log(`FOUND PLAYLIST WITH SONG LIMIT ${songBalance}`)}
       else
       {
+        console.log('songBalance set to 0')
         songBalance = 0
       }
 
@@ -110,6 +111,7 @@ app.get("/joinplaylist" , async (req,res) => {
         playlistName: playlistName,
         songBalance: songBalance
       });
+      console.log( 'newUser : ' , newUser)
       await newUser.save();
     }
     await playlistModel.findOne({ partyName: partyName , playlistName: playlistName, password: password })  
@@ -132,6 +134,25 @@ app.post("/addtrack" , async (req,res) => {
   const trackId = req.body.trackIdName;
   const playlistId = req.body.playlistId;
   const accessToken =  req.body.accessToken;
+  const userName = req.body.userName; 
+  const partyName = req.body.partyName; 
+  const playlistName = req.body.playlistName;
+  
+  // try to reduce balance by 1 and catch with appropriate error  
+  if  ( userName || playlistName  || partyName )
+  { console.log('userAcces')
+    try {
+    const userDetails = await userDetailsModel.findOne({ userName: userName, playlistName: playlistName, partyName: partyName });
+    // reduce the balance of the user by 1 
+    console.log(userDetails)
+    userDetails.songBalance = userDetails.songBalance - 1;
+    await userDetails.save();
+  } catch (error) {
+    console.error('Error occurred while updating user details:', error);
+    throw error;
+  }
+}
+  
 
   const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.REDIRECT_URI,
