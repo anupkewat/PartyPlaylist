@@ -33,6 +33,33 @@ import TrackCard from "./TrackCard";
 
     useEffect(() => {
       const fetchData = async () => {
+        try {
+          const requestData = {
+            playlistId: playlistId,
+            accessToken: accessToken
+          };
+  
+          const url = 'http://localhost:3001/reorderplaylist';
+          
+  
+          const response = await axios.post(url, requestData);
+          console.log('reordered playlist:', response.data);
+        } catch (error) {
+          console.error('Error:', error.response.data);
+        }
+      };
+  
+      const interval = setInterval(() => {
+        fetchData();
+      }, 3000); // Trigger every 3 seconds
+  
+      return () => clearInterval(interval); 
+  
+    }, []); 
+  
+
+    useEffect(() => {
+      const fetchData = async () => {
         console.log('getting playlist items...');
 
         try {

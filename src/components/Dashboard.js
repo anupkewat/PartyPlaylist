@@ -66,7 +66,7 @@ export default function Dashboard({ code }) {
   //       setLyrics(res.data.lyrics)
   //     })
   // }, [playingTrack])
-
+  
   useEffect(() => {
     if (!accessToken) return
     spotifyApi.setAccessToken(accessToken)

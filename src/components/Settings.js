@@ -24,7 +24,7 @@ const Settings = ({ accessToken, setCreatedPlaylist, setPlaylistId }) => {
         <div style = {{display: 'flex' , flexDirection: 'row'}}>
           
           
-          <div className='form-group'>
+          {/* <div className='form-group'>
             <label>Reorder Interval (in minutes)</label>
             <Form.Control
               type="number"
@@ -32,7 +32,7 @@ const Settings = ({ accessToken, setCreatedPlaylist, setPlaylistId }) => {
               value={interval}
               onChange={e => setInterval(e.target.value)}
             />
-          </div>
+          </div> */}
 
           <div className='form-group ml-10'>
             <label>Song Limit</label>

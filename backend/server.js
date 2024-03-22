@@ -74,6 +74,18 @@ const extractTrackInfo = (apiResponse) => {
   return trackInfoArray;
 };
 
+app.get("/getworkinginfo" , async (req,res) => {
+  const partyName = req.query.partyName
+  const playlistName = req.query.playlistName
+  await PlaylistWorkingDetailsModel.findOne({ partyName: partyName , playlistName: playlistName })  
+  .then((data)=> {
+    res.json(data)
+  }, function(err) {
+    console.log('Could not room wokring details', err);
+  });
+
+})
+
 app.get("/joinplaylist" , async (req,res) => {
 
   const partyName = req.query.partyName
@@ -375,7 +387,6 @@ app.get("/getplaylistitems", async (req, res) => {
     const api_response = data.body;
     const tracklist = extractTrackInfo(api_response);
 
-    // Find or create the queue details document based on the playlistId
     let queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
 
     if (!queueDetails) {
@@ -391,17 +402,14 @@ app.get("/getplaylistitems", async (req, res) => {
     for (const playlistItem of tracklist) {
       const { id, name } = playlistItem;
 
-      // Check if the track exists in the queue details
       const existingSong = queueDetails.songs.find(song => song.id === id);
 
-      // If the track does not exist in the queue details, add it with default values for likes and dislikes
       if (!existingSong) {
         queueDetails.songs.push({ id: id, name: name, numberOfLikes: 0, numberOfDislikes: 0 });
         console.log(`Added track ${name} to queue details`);
       }
     }
 
-    // Save the updated queue details document
     await queueDetails.save();
 
     // console.log('Updated queue details:', queueDetails);
