@@ -25,18 +25,18 @@
           <Switch>
             <Route path='/login'>
             { code ? <Dashboard code={code} /> : <Login />}
-              <Button onClick={() => window.location.href = 'https://party-playlist-2zfdsvzf8-anupkewats-projects.vercel.app/'} text={'go back'} />
+              <Button onClick={() => window.location.href = 'https://party-playlist-red.vercel.app/'} text={'go back'} />
             </Route>
 
             <Route path='/join'>
           <JoinDashboard />
             
-              <Button onClick={() => window.location.href = 'https://party-playlist-2zfdsvzf8-anupkewats-projects.vercel.app/'} text={'go back'} />
+              <Button onClick={() => window.location.href = 'https://party-playlist-red.vercel.app/'} text={'go back'} />
             </Route>
             
             <Route path='/'>
-              <Button onClick={() => window.location.href = 'https://party-playlist-2zfdsvzf8-anupkewats-projects.vercel.app/login'} text={'Start Party'} />
-              <Button onClick={() => window.location.href = 'https://party-playlist-2zfdsvzf8-anupkewats-projects.vercel.app/join'} text={'Join Party'} />
+              <Button onClick={() => window.location.href = 'https://party-playlist-red.vercel.app/login'} text={'Start Party'} />
+              <Button onClick={() => window.location.href = 'https://party-playlist-red.vercel.app/join'} text={'Join Party'} />
             </Route>
           </Switch>
       </div>
