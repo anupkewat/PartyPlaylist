@@ -3,8 +3,10 @@ import { useState, useEffect } from "react"
 import axios from 'axios';
 import SongCard from './SongCard'
 import TrackCard from "./TrackCard";
-
+require('dotenv').config()
   const PlaylistView = ({ accessToken, playlistId }) => {
+    const HOST = process.env.REACT_APP_HOST_SERVER
+    console.log(HOST)
     const [playlistData, setPlaylistData] = useState();
 
 
@@ -39,7 +41,7 @@ import TrackCard from "./TrackCard";
             accessToken: accessToken
           };
   
-          const url = 'http://localhost:3001/reorderplaylist';
+          const url = `${HOST}/reorderplaylist`;
           
   
           const response = await axios.post(url, requestData);
@@ -51,7 +53,7 @@ import TrackCard from "./TrackCard";
   
       const interval = setInterval(() => {
         fetchData();
-      }, 3000); // Trigger every 3 seconds
+      }, 60 * 1000); // Trigger every 60 seconds
   
       return () => clearInterval(interval); 
   
@@ -63,7 +65,7 @@ import TrackCard from "./TrackCard";
         console.log('getting playlist items...');
 
         try {
-          const response = await axios.get('http://localhost:3001/getplaylistitems', {
+          const response = await axios.get(`${HOST}/getplaylistitems`, {
             params: {
               accessToken,
               playlistId,

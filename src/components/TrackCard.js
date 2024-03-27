@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './trackCard.css'
 import axios from 'axios'
+const HOST = process.env.REACT_APP_HOST_SERVER
 const TrackCard = ({ playlistId, id, songName, artistName, imageUrls }) => {
+
+  const HOST = process.env.REACT_APP_HOST_SERVER
+  // console.log( process.env)
 const [heart , setHeart] = useState(false)
 const [times, setTimes] = useState(false)
 
@@ -11,14 +15,14 @@ const [times, setTimes] = useState(false)
 
       try {
 
-        const response = await axios.post('http://localhost:3001/likeSong', {
+        const response = await axios.post(`${HOST}/likeSong`, {
           playlistId,
           songId
         });
         setHeart(!heart);
-        console.log('Heart clicked for track:', songId);
+        console.log(`Heart clicked for track:`, songId);
       } catch (error) {
-        console.error('Error liking song:', error);
+        console.error(`Error liking song:`, error);
       }
     
       return
@@ -27,15 +31,15 @@ const [times, setTimes] = useState(false)
     try  {
       
 
-      const response = await axios.post('http://localhost:3001/unlikeSong', {
+      const response = await axios.post(`${HOST}/unlikeSong`, {
         playlistId,
         songId
       });
-      console.log('Heart un-clicked for track:', songId);
+      console.log(`Heart un-clicked for track:`, songId);
       setHeart(!heart);
     }
     catch (error) {
-      console.error('Error unliking song:', error);
+      console.error(`Error unliking song:`, error);
     }
     }
     
@@ -47,14 +51,14 @@ const [times, setTimes] = useState(false)
 
       try {
 
-        const response = await axios.post('http://localhost:3001/dislikeSong', {
+        const response = await axios.post(`${HOST}/dislikeSong`, {
           playlistId,
           songId
         });
         setTimes(!times);
         
       } catch (error) {
-        console.error('Error liking song:', error);
+        console.error(`Error liking song:`, error);
       }
     
       return
@@ -66,14 +70,14 @@ const [times, setTimes] = useState(false)
         try  {
           
     
-          const response = await axios.post('http://localhost:3001/undislikeSong', {
+          const response = await axios.post(`${HOST}/undislikeSong`, {
             playlistId,
             songId
           });
           setTimes(!times);
         }
         catch (error) {
-          console.error('Error undisliking song:', error);
+          console.error(`Error undisliking song:`, error);
         
         }
     }

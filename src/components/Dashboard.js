@@ -8,7 +8,7 @@ import SignUpForm from "./SignUpForm"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Settings from "./Settings"
-// import Player from "./Player"
+import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
@@ -17,6 +17,7 @@ import axios from "axios"
 // import Button from './Button'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import QRGenerator from "./QRGenerator";
 
 
 
@@ -37,10 +38,10 @@ export default function Dashboard({ code }) {
   const [searchResults, setSearchResults] = useState([])
   const [playingTrack, setPlayingTrack] = useState()
   const [lyrics, setLyrics] = useState("")
-  const [playlistName ,setPlaylistName] = useState("")
   const [playlistId , setPlaylistId] = useState("")
-  const [toggleSettings, setToggleSettings] = useState()
-
+  const [password, setPassword] = useState()
+  const [partyName, setPartyName] = useState()
+  const [playlistName, setPlaylistName] = useState()
 
   
 
@@ -49,6 +50,7 @@ export default function Dashboard({ code }) {
     setSearch("")
     setLyrics("")
   }
+  // console.log('from dashbaord', playlistName, password, partyName)
 
 
 
@@ -145,7 +147,8 @@ export default function Dashboard({ code }) {
               <ToastContainer />
               {searchResults.slice(0, 8).map((track) => (
                 <TrackSearchResult
-                  adminAccess={true}                  
+                  adminAccess={true}       
+                              
                   setSearch={setSearch}
                   track={track}
                   key={track.uri}
@@ -167,8 +170,24 @@ export default function Dashboard({ code }) {
 }
 
 {
-  value === 1 &&  <div> <Settings/> </div>
+  value === 1 &&  <div> <Settings
+  password={password}
+  setPassword={setPassword}
+  accessToken={accessToken}
+  setCreatedPlaylist={setCreatedPlaylist}
+  setPlaylistId={setPlaylistId}
+  partyName = {partyName}
+  playlistName ={playlistName}
+  setPartyName={setPartyName}
+  setPlaylistName={setPlaylistName} />
+
+ 
+ 
+  </div>
+
+  
 }
+
 
           </div>
         </div>
@@ -192,15 +211,27 @@ export default function Dashboard({ code }) {
               </Tabs>
 
             {value === 0 && (
+              <div>
               <SignUpForm
+              partyName={partyName}
+              setPartyName={setPartyName}
+              playlistName = {playlistName}
+              password={password}
+              setPassword={setPassword}
               accessToken={accessToken}
               setCreatedPlaylist={setCreatedPlaylist}
               setPlaylistId={setPlaylistId}
               setPlaylistName={setPlaylistName}
             />
+            </div>
             )}
             {value === 1 && (
               <RejoinForm
+              partyName = {partyName}
+              setPartyName = {setPartyName}
+              playlistName = {playlistName}
+              password = {password}
+              setPassword = {setPassword}
               accessToken = {accessToken}
               setCreatedPlaylist={setCreatedPlaylist}
               setPlaylistId={setPlaylistId}

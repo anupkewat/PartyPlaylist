@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap'; // Assuming you are using Bootstrap for styling
 import axios from "axios"
+require('dotenv').config()
 
+const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId, password, setPassword, setPlaylistName, playlistName, partyName, setPartyName}) => {
+  const HOST = process.env.REACT_APP_HOST_SERVER
+  const REACT_HOST = process.env.REACT_HOST || 'http://localhost:3000'
 
-const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId}) => {
-  const [partyName, setPartyName] = useState('');
-  const [playlistName, setPlaylistName] = useState('');
   const [ownerName, setOwnerName] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
 
@@ -24,7 +24,7 @@ const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId}) => {
     }
     console.log(accessToken)
     axios
-      .post("http://localhost:3001/updateaccesstoken", {
+      .post(`${HOST}/updateaccesstoken`, {
         playlistName,accessToken,ownerName,partyName,password
       })
       .then((res)=> {
@@ -61,6 +61,10 @@ const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId}) => {
     e.preventDefault(); 
     // console.log('clicked :)')
     updateAccessToken(); 
+    setPlaylistName(playlistName);
+    setPassword(password); 
+    setPartyName(partyName);
+    console.log(playlistName, password, partyName)
 
   };
 

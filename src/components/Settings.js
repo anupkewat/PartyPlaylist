@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from "axios";
+import QRGenerator from "./QRGenerator";
 
-const Settings = ({ accessToken, setCreatedPlaylist, setPlaylistId }) => {
-  const [partyName, setPartyName] = useState('');
-  const [playlistName, setPlaylistName] = useState('');
+const Settings = ({  partyName, setPartyName, playlistName, setPlaylistName, setCreatedPlaylist,  setPassword, password ,accessToken, setPlaylistId }) => {
   const [ownerName, setOwnerName] = useState('');
   const [error, setError] = useState(null);
-  const [password, setPassword] = useState('');
   const [interval , setInterval] = useState('')
   const [limit, setLimit] = useState()
 
@@ -49,6 +47,12 @@ const Settings = ({ accessToken, setCreatedPlaylist, setPlaylistId }) => {
           <button type="submit" className="form-submit-btn" onClick={handleSubmit}>
             Submit
           </button>
+
+          <QRGenerator
+  password={password}
+  partyName = {partyName}
+  playlistName ={playlistName} />
+
           {error && (
             <Alert variant="danger">
               {error}

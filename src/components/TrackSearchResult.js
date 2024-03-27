@@ -2,8 +2,41 @@ import React from 'react';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import  { useState ,useEffect } from 'react';
 
-export default function TrackSearchResult({ songBalanceTrigger, setSongBalanceTrigger, adminAccess, songBalance , setSongBalance, userName, playlistName, partyName, track, key1, playlistId, accessToken, setSearch }) {
+const HOST = process.env.REACT_APP_HOST_SERVER
+
+
+
+
+export default function TrackSearchResult({adminAccess , userName, playlistName, partyName, track, key1, playlistId, accessToken, setSearch }) {
+  const [ songBalanceTrigger, setSongBalanceTrigger ] = useState(false);
+
+  const [songBalance, setSongBalance] = useState(0);
+  useEffect(() => {
+    const getSongBalance = async () => {
+      try {
+        console.log('triggered song balance')
+        const response = await axios.get(`${HOST}/getsongbalance`, {
+          params: {
+            userName,
+            partyName, 
+            playlistName,
+          },
+        });
+        console.log(response.data.songBalance); // Log inside the function
+        setSongBalance(response.data.songBalance);
+        return response.data.songBalance;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if ( !adminAccess)
+
+    {getSongBalance();} // Call the function
+  
+  }, [songBalanceTrigger]);
+  
   function handleSelection() {
     console.log(key1);
     console.log(playlistId);
@@ -17,10 +50,10 @@ export default function TrackSearchResult({ songBalanceTrigger, setSongBalanceTr
     };
     if ( adminAccess || songBalance > 0) // if available balance
     {
+      
+      console.log(HOST)
 
-
-
-      axios.post('http://localhost:3001/addtrack', requestBody)
+      axios.post(`${HOST}/addtrack`, requestBody)
       .then(function (response) {
         console.log('Track added successfully:', response.data);
         toast(`Added Song ${track.title}`);
@@ -33,7 +66,6 @@ export default function TrackSearchResult({ songBalanceTrigger, setSongBalanceTr
       })
       .catch(function (error) {
         console.error('Error adding track:', error);
-        toast(`Could not add song :(`);
       });
       
 

@@ -7,9 +7,11 @@ import AddSongDashboard from './AddSongDashboard';
 import PlaylistView from './PlaylistView';
 import Box from '@mui/material/Box';
 import SongLimit from './SongLimit';
+require('dotenv').config()  
 import axios from 'axios';
 import { responsiveFontSizes } from '@mui/material';
 
+const HOST = process.env.REACT_APP_HOST_SERVER
 const PartyDashboard = ({userName , partyName }) => {
     const [value, setValue] = React.useState(0);
     
@@ -35,7 +37,7 @@ const PartyDashboard = ({userName , partyName }) => {
     const getSongBalance = async () => {
       try {
         console.log('triggered song balance')
-        const response = await axios.get('http://localhost:3001/getsongbalance', {
+        const response = await axios.get(`${HOST}/getsongbalance`, {
           params: {
             userName,
             partyName, 

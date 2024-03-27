@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios'
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import JoinPartyContext from '../contexts/JoinPartyContext';
+require('dotenv').config()
+
+const HOST = process.env.REACT_APP_HOST_SERVER
 
 
 
@@ -12,13 +15,26 @@ const JoinForm = ({partyName, playlistName, setJoinedParty, userName, setUserNam
     const {setPartyDetails} = useContext(JoinPartyContext)
     const [password, setPassword] = useState('');
 
+
+    useEffect(() => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const partyParam = urlParams.get('party');
+      const playlistParam = urlParams.get('playlist');
+      const passwordParam = urlParams.get('pass');
+      setPartyName(partyParam);
+      setPlaylistName(playlistParam);
+      setPassword(passwordParam);
+      // window.history.pushState({}, document.title, window.location.pathname); //remove the params
+    }, []);
+
+
     const handleSubmit = async (event) => {
     event.preventDefault();
     const fetchData = async () => {
         console.log('Joining Room...');
 
         try {
-          const response = await axios.get('http://localhost:3001/joinplaylist', {
+          const response = await axios.get(`${HOST}/joinplaylist`, {
             params: {
               partyName,
               userName,

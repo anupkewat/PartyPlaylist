@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from "axios";
+require('dotenv').config()
 
-const SignUpForm = ({ accessToken, setCreatedPlaylist, setPlaylistId }) => {
-  const [partyName, setPartyName] = useState('');
-  const [playlistName, setPlaylistName] = useState('');
+const SignUpForm = ({partyName, setPartyName, playlistName, setPlaylistName,accessToken, setCreatedPlaylist, setPlaylistId, setPassword, password }) => {
   const [ownerName, setOwnerName] = useState('');
   const [error, setError] = useState(null);
-  const [password, setPassword] = useState('');
 
+  const HOST = process.env.REACT_APP_HOST_SERVER
 
   const createPlaylist = () => {
+
     console.log({
       playlistName, accessToken, ownerName, partyName, password
     })
+    console.log(process.env)
     axios
-      .post("http://localhost:3001/createplaylist", {
+      .post(`${HOST}/createplaylist`, {
         playlistName, accessToken, ownerName, partyName, password
       })
       .then((res) => {
@@ -44,7 +45,7 @@ const SignUpForm = ({ accessToken, setCreatedPlaylist, setPlaylistId }) => {
   };
 
   const handleLogin = () => {
-    window.location.href = "http://localhost:3000/login";
+    window.location.href = 'http://localhost:3000/login';
   };
 
   return (

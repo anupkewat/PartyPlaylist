@@ -5,12 +5,13 @@ export default function useAuth(code) {
   const [accessToken, setAccessToken] = useState();
   const [refreshToken, setRefreshToken] = useState();
   const [expiresIn, setExpiresIn] = useState();
+  const HOST = process.env.REACT_APP_HOST_SERVER
 
   useEffect(() => {
     console.log('himeat')
     const fetchData = async () => {
       try {
-        const res = await axios.post("http://localhost:3001/login", {
+        const res = await axios.post(`${HOST}/login`, {
           code,
         });
 

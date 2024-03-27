@@ -149,7 +149,7 @@ app.post("/addtrack" , async (req,res) => {
   const userName = req.body.userName; 
   const partyName = req.body.partyName; 
   const playlistName = req.body.playlistName;
-  
+  console.log(req)
   // try to reduce balance by 1 and catch with appropriate error  
   if  ( userName || playlistName  || partyName )
   { console.log('userAcces')
@@ -447,7 +447,7 @@ app.post("/createplaylist", async (req, res) => {
         console.log("Playlist with the same owner, party, and name already exists")
         return res.status(402).json({ success: false, error: "Playlist with the same owner, party, and name already exists" });
     }
-
+    console.log(process.env)
     const spotifyApi = new SpotifyWebApi({
       redirectUri: process.env.REDIRECT_URI,
       clientId: process.env.CLIENT_ID,
@@ -483,7 +483,7 @@ app.post("/createplaylist", async (req, res) => {
       partyName: partyName,
     });
     // console.log(playlistEntry)
-    res.status(201).json({ success: true, message: 'Playlist created and logged to DB', playlistEntry });
+    res.status(201).json({ success: true, message: 'Playlist created and logged to DB'});
 
   } catch (err) {
     console.log('Something went wrong!', err);
@@ -596,7 +596,7 @@ app.post('/reorderplaylist', async (req, res) => {
     console.log('fecthing spotify playlist...');
     
     const queueDetails = await QueueDetailsModel.findOne({ playlistId: playlistId });
-    console.log(queueDetails)
+    // console.log(queueDetails)
 
     if (!queueDetails) {
       console.log(queueDetails)
@@ -641,7 +641,6 @@ async function reorderPlaylistTracks(spotifyApi, playlistId, sortedTracks) {
     const trackURIs = sortedTracks.map(track => 'spotify:track:' + track.id);
     // console.log(trackURIs)
     await spotifyApi.replaceTracksInPlaylist(playlistId, trackURIs);
-    console.log('Tracks reordered in playlist!');
   } catch (err) {
     console.error('Error reordering playlist tracks:', err);
     throw err;

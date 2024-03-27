@@ -1,5 +1,5 @@
 import { DataProvider } from '../contexts/JoinPartyContext';
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import PartyDashboard from './PartyDashboard';
 import JoinForm from './JoinForm'
 const JoinDashboard = () => {
@@ -9,7 +9,7 @@ const [joinedParty, setJoinedParty] = useState(false)
 const [userName, setUserName] = useState()
  const [partyName, setPartyName] = useState('');
 const [playlistName , setPlaylistName] = useState('');
-
+const [code, setCode] = useState(null);
 
 return (
 <DataProvider>
