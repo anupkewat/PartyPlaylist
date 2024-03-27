@@ -8,7 +8,7 @@ import SignUpForm from "./SignUpForm"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Settings from "./Settings"
-import Player from "./Player"
+// import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"

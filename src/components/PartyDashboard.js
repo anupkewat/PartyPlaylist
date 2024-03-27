@@ -7,9 +7,8 @@ import AddSongDashboard from './AddSongDashboard';
 import PlaylistView from './PlaylistView';
 import Box from '@mui/material/Box';
 import SongLimit from './SongLimit';
-require('dotenv').config()  
 import axios from 'axios';
-import { responsiveFontSizes } from '@mui/material';
+require('dotenv').config()  
 
 const HOST = process.env.REACT_APP_HOST_SERVER
 const PartyDashboard = ({userName , partyName }) => {
