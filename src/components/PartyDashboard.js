@@ -32,6 +32,8 @@ const PartyDashboard = ({userName , partyName }) => {
   }, [partyDetails, setAccessToken, setPlaylistName, setOwnerName, playlistId, playlistName ]);
 
 
+  
+
   useEffect(() => {
     const getSongBalance = async () => {
       try {
@@ -43,9 +45,8 @@ const PartyDashboard = ({userName , partyName }) => {
             playlistName,
           },
         });
-        console.log(response.data.songBalance); // Log inside the function
-        setSongBalance(response.data.songBalance);
-        return response.data.songBalance;
+        console.log('RESPONSE FROM SONGBALANCE-SERVER',response.data.songBalance); // Log inside the function
+        setSongBalance( response.data.songBalance);
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +54,7 @@ const PartyDashboard = ({userName , partyName }) => {
   
     getSongBalance(); // Call the function
   
-  }, [songBalanceTrigger, userName, playlistName, partyName]);
+  }, [songBalanceTrigger]);
   
 
   const handleChange = (event, newValue) => {
@@ -66,7 +67,7 @@ const PartyDashboard = ({userName , partyName }) => {
     <div>
       <p style={title_style}> {ownerName}'s Party </p>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-  <SongLimit text = {songBalance} />
+  
 </div>
       <Box sx={{ width: '100%' }}>
         <Tabs value={value} onChange={handleChange} centered>
@@ -79,8 +80,13 @@ const PartyDashboard = ({userName , partyName }) => {
         <PlaylistView accessToken={accessToken} playlistId={playlistId}/>
     </div>
     } 
-      {value === 1 && <div>  <AddSongDashboard  songBalanceTrigger = {songBalanceTrigger} setSongBalanceTrigger = {setSongBalanceTrigger} songBalance = {songBalance}  setSongBalance = {setSongBalance} userName = {userName}  playlistName = {playlistName} partyName = {partyName} accessToken = {accessToken} playlistId={ playlistId}/> </div>
-      
+      {value === 1 && <div
+      style ={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+         <div style ={{marginTop: '10px' , marginBottom: '10px'}}> 
+        <SongLimit text = {songBalance}  style ={{display: 'flex', alignItems: 'center', justifyContent: 'center'}} />
+        </div>
+        <div><AddSongDashboard  songBalanceTrigger = {songBalanceTrigger} setSongBalanceTrigger = {setSongBalanceTrigger} songBalance = {songBalance}  setSongBalance = {setSongBalance} userName = {userName}  playlistName = {playlistName} partyName = {partyName} accessToken = {accessToken} playlistId={ playlistId}/> </div>
+      </div>
       } 
     </div>
   );

@@ -13,6 +13,8 @@
   }
 
   .rounded-box {
+    justify-content: center;
+    width: 100%;
     text-align: center;
     align-items: center;
     border: 1px solid #ffffff;
@@ -133,6 +135,31 @@ input[type="number"] {
       transform: scaleX(1);
     }
   }
+  
+  .playing-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #282828;
+    border-radius: 10px;
+    padding: 16px;
+    margin: auto;
+    max-width: fit-content;
+    background-size: cover;
+    max-height: 500px; 
+    overflow-y: scroll; 
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); /* Initial shadow with no spread */
+    animation: borderGlow 2s linear infinite alternate; /* Animation to create trailing light effect */
+  }
+  
+  @keyframes borderGlow {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1); /* Initial shadow with no spread */
+    }
+    100% {
+      box-shadow: 0 0 20px 20px rgba(255, 255, 255, 0); /* Final shadow with spread */
+    }
+  }
+  
   .playlist-container {
     display: flex;
     flex-direction: column;

@@ -149,10 +149,9 @@ app.post("/addtrack" , async (req,res) => {
   const userName = req.body.userName; 
   const partyName = req.body.partyName; 
   const playlistName = req.body.playlistName;
-  console.log(req)
   // try to reduce balance by 1 and catch with appropriate error  
   if  ( userName || playlistName  || partyName )
-  { console.log('userAcces')
+  { console.log('NON ADMIN ACCESS')
     try {
     const userDetails = await userDetailsModel.findOne({ userName: userName, playlistName: playlistName, partyName: partyName });
     // reduce the balance of the user by 1 
@@ -499,6 +498,7 @@ app.post("/createplaylist", async (req, res) => {
 app.get("/getsongbalance", async (req, res) => {
   
   try {
+    console.log('@/getsongbalance')
     const userName = req.query.userName;
     const partyName = req.query.partyName;
     const playlistName = req.query.playlistName;

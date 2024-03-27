@@ -8,16 +8,14 @@ import SignUpForm from "./SignUpForm"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Settings from "./Settings"
-// import Player from "./Player"
 import TrackSearchResult from "./TrackSearchResult"
 import { Container, Form } from "react-bootstrap"
 import SpotifyWebApi from "spotify-web-api-node"
 import SearchInput from "./SearchInput"
-import axios from "axios"
 // import Button from './Button'
+import SpotifyPlayer from "./SpotifyPlayer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import QRGenerator from "./QRGenerator";
 
 
 
@@ -126,6 +124,7 @@ export default function Dashboard({ code }) {
            <div style = {{ flexDirection: 'row'}}>
             <p style={title_style}>Your Party </p>
             </div> 
+            
 
 
 
@@ -133,6 +132,7 @@ export default function Dashboard({ code }) {
         <Tabs value={value} onChange={handleChange} centered>
           <Tab label="Playlist" sx={{ color: '#e8e8e8' }} />
           <Tab label="Manage Party" sx={{ color: '#e8e8e8' }} />
+          
         </Tabs>
       </Box>
       { value === 0 &&
@@ -160,7 +160,9 @@ export default function Dashboard({ code }) {
               ))}
               
             </div>
-
+            <div className="playing-container"> 
+              <SpotifyPlayer accessToken={accessToken} />
+              </div>
               <PlaylistView
                 accessToken={accessToken}
                 playlistId={playlistId}

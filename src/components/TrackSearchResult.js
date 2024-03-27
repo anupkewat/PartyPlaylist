@@ -9,13 +9,13 @@ const HOST = process.env.REACT_APP_HOST_SERVER
 
 
 
-export default function TrackSearchResult({adminAccess , userName, playlistName, partyName, track, key1, playlistId, accessToken, setSearch }) {
+export default function TrackSearchResult({songBalance, setSongBalance,adminAccess , userName, playlistName, partyName, track, key1, playlistId, accessToken, setSearch }) {
   const [ songBalanceTrigger, setSongBalanceTrigger ] = useState(false);
 
-  const [songBalance, setSongBalance] = useState(0);
   useEffect(() => {
     const getSongBalance = async () => {
       try {
+
         console.log('triggered song balance')
         const response = await axios.get(`${HOST}/getsongbalance`, {
           params: {
@@ -24,8 +24,8 @@ export default function TrackSearchResult({adminAccess , userName, playlistName,
             playlistName,
           },
         });
-        console.log(response.data.songBalance); // Log inside the function
-        setSongBalance(response.data.songBalance);
+        console.log('response from server :' ,response.data.songBalance); // Log inside the function
+        setSongBalance( response.data.songBalance);
         return response.data.songBalance;
       } catch (error) {
         console.log(error);
