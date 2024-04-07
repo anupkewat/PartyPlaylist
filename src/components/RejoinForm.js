@@ -4,9 +4,9 @@ import axios from "axios"
 require('dotenv').config()
 
 const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId, password, setPassword, setPlaylistName, playlistName, partyName, setPartyName}) => {
-  const HOST = process.env.REACT_APP_HOST_SERVER
-  const REACT_HOST = process.env.REACT_HOST || 'http://localhost:3000'
-
+  const HOST_SERVER = process.env.REACT_APP_HOST_SERVER
+  const REACT_HOST = process.env.REACT_APP_HOST || 'http://localhost:3000'
+  console.log('@rejoin',REACT_HOST)
   const [ownerName, setOwnerName] = useState('');
   const [error, setError] = useState(null);
 
@@ -14,7 +14,7 @@ const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId, password, se
   console.log('@rejoin: rejoining playlist with AT:' ,accessToken)
   
   const handleLogin = () => {
-    window.location.href = "http://localhost:3000/login";
+    window.location.href = "${REACT_HOST}/login";
   };
   const updateAccessToken = () =>{   
     
@@ -24,7 +24,7 @@ const RejoinForm = ({accessToken,setCreatedPlaylist, setPlaylistId, password, se
     }
     console.log(accessToken)
     axios
-      .post(`${HOST}/updateaccesstoken`, {
+      .post(`${HOST_SERVER}/updateaccesstoken`, {
         playlistName,accessToken,ownerName,partyName,password
       })
       .then((res)=> {

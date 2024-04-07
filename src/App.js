@@ -10,7 +10,9 @@
   import {BrowserRouter as Router, Route , Switch} from 'react-router-dom'
   const code = new URLSearchParams(window.location.search).get('code')
   function App() {
-    const HOST = process.env.REACT_APP_HOST_SERVER
+    const HOST_SERVER = process.env.REACT_APP_HOST_SERVER
+    const HOST = process.env.REACT_APP_HOST
+    console.log(  process.env.REACT_APP_HOST)
     // console.log(HOST)
 
     const [createParty , setCreateParty] = useState(false)
@@ -27,18 +29,18 @@
           <Switch>
             <Route path='/login'>
             { code ? <Dashboard code={code} /> : <Login />}
-              <Button onClick={() => window.location.href = 'http://localhost:3000/'} text={'go back'} />
+              <Button onClick={() => window.location.href = `${HOST}/`} text={'go back'} />
             </Route>
 
             <Route path='/join'>
           <JoinDashboard />
             
-              <Button onClick={() => window.location.href = 'http://localhost:3000/'} text={'go back'} />
+              <Button onClick={() => window.location.href = `${HOST}/`} text={'go back'} />
             </Route>
             
             <Route path='/'>
-              <Button onClick={() => window.location.href = 'http://localhost:3000/login'} text={'Start Party'} />
-              <Button onClick={() => window.location.href = 'http://localhost:3000/join'} text={'Join Party'} />
+              <Button onClick={() => window.location.href = `${HOST}/login`} text={'Start Party'} />
+              <Button onClick={() => window.location.href = `${HOST}/join`} text={'Join Party'} />
             </Route>
           </Switch>
       </div>

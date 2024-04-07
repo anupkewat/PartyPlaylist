@@ -3,11 +3,15 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import axios from "axios";
 require('dotenv').config()
 
+
 const SignUpForm = ({partyName, setPartyName, playlistName, setPlaylistName,accessToken, setCreatedPlaylist, setPlaylistId, setPassword, password }) => {
   const [ownerName, setOwnerName] = useState('');
   const [error, setError] = useState(null);
 
   const HOST = process.env.REACT_APP_HOST_SERVER
+  const REACT_HOST = process.env.REACT_APP_HOST || 'http://localhost:3000'
+  console.log('@signup',REACT_HOST)
+
 
   const createPlaylist = () => {
 
@@ -45,7 +49,7 @@ const SignUpForm = ({partyName, setPartyName, playlistName, setPlaylistName,acce
   };
 
   const handleLogin = () => {
-    window.location.href = 'http://localhost:3000/login';
+    window.location.href = `${REACT_HOST}/login`;
   };
 
   return (

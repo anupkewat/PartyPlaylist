@@ -2,7 +2,9 @@ import React from 'react';
 import QRCode from 'react-qr-code';
 
 function QRGenerator( {partyName ,playlistName , password}) {
-const link = `http://localhost:3000/join?party=${partyName}&playlist=${playlistName}&pass=${password}`
+const REACT_HOST = process.env.REACT_APP_HOST || 'http://localhost:3000'
+
+const link = `${REACT_HOST}/join?party=${partyName}&playlist=${playlistName}&pass=${password}`
 console.log(link)
 
 

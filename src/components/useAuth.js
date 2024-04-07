@@ -11,7 +11,7 @@ export default function useAuth(code) {
     console.log('himeat')
     const fetchData = async () => {
       try {
-        const res = await axios.post(`${HOST}/login`, {
+        const res = await axios.post(`${HOST_SERVER}/login`, {
           code,
         });
 
