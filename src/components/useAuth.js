@@ -5,9 +5,10 @@ export default function useAuth(code) {
   const [accessToken, setAccessToken] = useState();
   const [refreshToken, setRefreshToken] = useState();
   const [expiresIn, setExpiresIn] = useState();
-  const HOST = process.env.REACT_APP_HOST_SERVER
+  const HOST_SERVER = process.env.REACT_APP_HOST_SERVER
 
   useEffect(() => {
+
     console.log('himeat')
     const fetchData = async () => {
       try {
