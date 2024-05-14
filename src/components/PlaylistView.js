@@ -53,7 +53,7 @@ require('dotenv').config()
   
       const interval = setInterval(() => {
         fetchData();
-      }, 60 * 1000); // Trigger every 60 seconds
+      }, 6 * 1000); // Trigger every 60 seconds
   
       return () => clearInterval(interval); 
   
@@ -84,7 +84,7 @@ require('dotenv').config()
 
       const intervalId = setInterval(() => {
         fetchData();
-      }, 10000);
+      }, 3*1000);
 
       return () => clearInterval(intervalId);
     }, [accessToken, playlistId]);

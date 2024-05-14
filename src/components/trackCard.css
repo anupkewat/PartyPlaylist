@@ -38,7 +38,7 @@
 }
 
 .song-title {
-    font-size: 0.9vw;
+    font-size: 2vh;
     margin: 4px;
     width: 150px;
     height: 60px;
@@ -52,7 +52,7 @@
 }
 
 .artist-details {
-    font-size: 0.75vw; /* 5% of the viewport width */
+    font-size: 2vh; /* 5% of the viewport width */
     max-width: 80%;
     color: #e8e8e8;
     font-weight: 350;
